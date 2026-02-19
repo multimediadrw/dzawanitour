@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 
 const navLinks = [
@@ -51,26 +52,15 @@ export default function Navbar() {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-dzawani-gradient flex items-center justify-center">
-              <span className="text-white font-bold text-lg font-poppins">D</span>
-            </div>
-            <div>
-              <span
-                className={`font-bold text-xl font-poppins transition-colors ${
-                  isScrolled ? "text-purple" : "text-white"
-                }`}
-              >
-                Dzawani
-              </span>
-              <span
-                className={`font-bold text-xl font-poppins transition-colors ${
-                  isScrolled ? "text-magenta" : "text-ocean"
-                }`}
-              >
-                Tour
-              </span>
-            </div>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="Dzawani Tour"
+              width={160}
+              height={60}
+              className={`h-12 w-auto transition-all duration-300 ${isScrolled ? "brightness-100" : "brightness-0 invert"}`}
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, MessageCircle } from "lucide-react";
 
 const footerLinks = {
@@ -23,14 +24,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                <span className="text-white font-bold text-lg font-poppins">D</span>
-              </div>
-              <div>
-                <span className="font-bold text-xl text-white font-poppins">Dzawani</span>
-                <span className="font-bold text-xl text-ocean font-poppins">Tour</span>
-              </div>
+            <Link href="/" className="flex items-center mb-5">
+              <Image
+                src="/logo.png"
+                alt="Dzawani Tour"
+                width={160}
+                height={60}
+                className="h-12 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-white/70 text-sm leading-relaxed font-inter mb-6 max-w-xs">
               Dzawani Tour hadir untuk mewujudkan impian perjalanan Anda. Dengan pengalaman lebih dari 10 tahun, kami siap memberikan layanan terbaik untuk setiap perjalanan Anda.
