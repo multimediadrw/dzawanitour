@@ -187,7 +187,7 @@ export default function OpenTripPage() {
       <Navbar />
 
       {/* Hero D'Tourkeun */}
-      <div className="bg-purple pt-28 pb-16 relative overflow-hidden">
+      <div className="bg-purple pt-36 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-4">

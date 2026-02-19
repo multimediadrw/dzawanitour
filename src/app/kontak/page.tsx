@@ -25,7 +25,7 @@ export default function KontakPage() {
       <Navbar />
 
       {/* Hero */}
-      <div className="bg-purple pt-28 pb-16 relative overflow-hidden">
+      <div className="bg-purple pt-36 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-4">

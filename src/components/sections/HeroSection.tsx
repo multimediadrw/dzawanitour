@@ -50,7 +50,7 @@ export default function HeroSection() {
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-ocean/20 rounded-full blur-3xl" />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 max-w-7xl pt-24 pb-16">
+      <div className="relative z-10 container mx-auto px-4 max-w-7xl pt-36 pb-16">
         <div className="max-w-4xl">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
