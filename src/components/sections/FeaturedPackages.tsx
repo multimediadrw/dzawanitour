@@ -5,15 +5,17 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import TourCard from "@/components/ui/TourCard";
 import { tourPackages } from "@/lib/data";
-
-const categories = [
-  { id: "semua", label: "Semua Paket" },
-  { id: "domestik", label: "Wisata Domestik" },
-  { id: "internasional", label: "Wisata Internasional" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function FeaturedPackages() {
   const [activeCategory, setActiveCategory] = useState("semua");
+  const { language } = useLanguage();
+
+  const categories = [
+    { id: "semua", label: language === "en" ? "All Packages" : "Semua Paket" },
+    { id: "domestik", label: language === "en" ? "Domestic Tour" : "Wisata Domestik" },
+    { id: "internasional", label: language === "en" ? "International Tour" : "Wisata Internasional" },
+  ];
 
   const filteredPackages =
     activeCategory === "semua"
@@ -26,13 +28,15 @@ export default function FeaturedPackages() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <span className="inline-block text-magenta font-semibold text-sm font-inter uppercase tracking-wider mb-3">
-            Paket Pilihan
+            {language === "en" ? "Featured Packages" : "Paket Pilihan"}
           </span>
           <h2 className="section-title mb-4">
-            Temukan Paket Tour Terbaik
+            {language === "en" ? "Find the Best Tour Package" : "Temukan Paket Tour Terbaik"}
           </h2>
           <p className="section-subtitle max-w-2xl mx-auto">
-            Dari wisata domestik yang memukau hingga petualangan internasional yang tak terlupakan, tersedia dalam format Open Trip maupun Private Trip.
+            {language === "en"
+              ? "From stunning domestic tours to unforgettable international adventures, available in Open Trip and Private Trip formats."
+              : "Dari wisata domestik yang memukau hingga petualangan internasional yang tak terlupakan, tersedia dalam format Open Trip maupun Private Trip."}
           </p>
         </div>
 
@@ -62,18 +66,12 @@ export default function FeaturedPackages() {
 
         {/* View All Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-          <Link
-            href="/open-trip"
-            className="btn-primary inline-flex items-center gap-2 text-base"
-          >
-            Lihat Open Trip
+          <Link href="/open-trip" className="btn-primary inline-flex items-center gap-2 text-base">
+            {language === "en" ? "View Open Trip" : "Lihat Open Trip"}
             <ArrowRight className="w-5 h-5" />
           </Link>
-          <Link
-            href="/private-trip"
-            className="btn-secondary inline-flex items-center gap-2 text-base"
-          >
-            Lihat Private Trip
+          <Link href="/private-trip" className="btn-secondary inline-flex items-center gap-2 text-base">
+            {language === "en" ? "View Private Trip" : "Lihat Private Trip"}
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

@@ -5,37 +5,40 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
-
-const navLinks = [
-  { label: "Beranda", href: "/" },
-  {
-    label: "Open Trip",
-    href: "/open-trip",
-    children: [
-      { label: "Wisata Domestik", href: "/open-trip?kategori=domestik" },
-      { label: "Wisata Internasional", href: "/open-trip?kategori=internasional" },
-    ],
-  },
-  {
-    label: "Private Trip",
-    href: "/private-trip",
-    children: [
-      { label: "Wisata Domestik", href: "/private-trip?kategori=domestik" },
-      { label: "Wisata Internasional", href: "/private-trip?kategori=internasional" },
-    ],
-  },
-  { label: "FAQ", href: "/faq" },
-  { label: "Tentang", href: "/tentang" },
-  { label: "Kontak", href: "/kontak" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const isOpenTripPage = pathname?.startsWith("/open-trip");
+
+  const navLinks = [
+    { label: t.nav.home, href: "/" },
+    {
+      label: t.nav.openTrip,
+      href: "/open-trip",
+      children: [
+        { label: t.nav.domesticTour, href: "/open-trip?kategori=domestik" },
+        { label: t.nav.internationalTour, href: "/open-trip?kategori=internasional" },
+      ],
+    },
+    {
+      label: t.nav.privateTrip,
+      href: "/private-trip",
+      children: [
+        { label: t.nav.domesticTour, href: "/private-trip?kategori=domestik" },
+        { label: t.nav.internationalTour, href: "/private-trip?kategori=internasional" },
+      ],
+    },
+    { label: t.nav.faq, href: "/faq" },
+    { label: t.nav.about, href: "/tentang" },
+    { label: t.nav.contact, href: "/kontak" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,17 +62,15 @@ export default function Navbar() {
           {/* Logo */}
           <Link href={isOpenTripPage ? "/open-trip" : "/"} className="flex items-center">
             {isOpenTripPage ? (
-              /* Logo D'Tourkeun — tinggi proporsional sama dengan Dzawani Tour */
               <Image
                 src="/logo-dtourkeun.png"
                 alt="D'Tourkeun by Dzawani Tour"
-                width={160}
-                height={50}
+                width={200}
+                height={75}
                 className="h-10 w-auto"
                 priority
               />
             ) : (
-              /* Logo Dzawani Tour — normal */
               <Image
                 src="/logo.png"
                 alt="Dzawani Tour"
@@ -124,8 +125,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons + Language Switcher */}
           <div className="hidden lg:flex items-center gap-3">
+            <LanguageSwitcher />
             <a
               href="tel:+6281234567890"
               className={`flex items-center gap-2 text-sm font-medium transition-colors font-inter ${
@@ -136,7 +138,7 @@ export default function Navbar() {
               <span>+62 812-3456-7890</span>
             </a>
             <Link href="/kontak" className="btn-primary text-sm py-2.5 px-5">
-              Pesan Sekarang
+              {t.nav.orderNow}
             </Link>
           </div>
 
@@ -179,13 +181,16 @@ export default function Navbar() {
                 )}
               </div>
             ))}
-            <div className="p-4">
+            <div className="p-4 flex flex-col gap-3">
+              <div className="flex justify-center">
+                <LanguageSwitcher />
+              </div>
               <Link
                 href="/kontak"
                 onClick={() => setIsOpen(false)}
                 className="btn-primary w-full text-center block"
               >
-                Pesan Sekarang
+                {t.nav.orderNow}
               </Link>
             </div>
           </div>

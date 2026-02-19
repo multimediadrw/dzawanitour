@@ -1,22 +1,27 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, MessageCircle } from "lucide-react";
-
-const footerLinks = {
-  trip: [
-    { label: "Open Trip Domestik", href: "/open-trip?kategori=domestik" },
-    { label: "Open Trip Internasional", href: "/open-trip?kategori=internasional" },
-    { label: "Private Trip Domestik", href: "/private-trip?kategori=domestik" },
-    { label: "Private Trip Internasional", href: "/private-trip?kategori=internasional" },
-  ],
-  bantuan: [
-    { label: "FAQ", href: "/faq" },
-    { label: "Syarat & Ketentuan", href: "/faq?tab=syarat" },
-    { label: "Kontak Kami", href: "/kontak" },
-  ],
-};
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Footer() {
+  const { t, language } = useLanguage();
+
+  const footerLinks = {
+    trip: [
+      { label: language === "en" ? "Domestic Open Trip" : "Open Trip Domestik", href: "/open-trip?kategori=domestik" },
+      { label: language === "en" ? "International Open Trip" : "Open Trip Internasional", href: "/open-trip?kategori=internasional" },
+      { label: language === "en" ? "Domestic Private Trip" : "Private Trip Domestik", href: "/private-trip?kategori=domestik" },
+      { label: language === "en" ? "International Private Trip" : "Private Trip Internasional", href: "/private-trip?kategori=internasional" },
+    ],
+    bantuan: [
+      { label: "FAQ", href: "/faq" },
+      { label: language === "en" ? "Terms & Conditions" : "Syarat & Ketentuan", href: "/faq?tab=syarat" },
+      { label: language === "en" ? "Contact Us" : "Kontak Kami", href: "/kontak" },
+    ],
+  };
+
   return (
     <footer className="bg-purple text-white">
       {/* Main Footer */}
@@ -34,7 +39,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-white/70 text-sm leading-relaxed font-inter mb-6 max-w-xs">
-              Dzawani Tour hadir untuk mewujudkan impian perjalanan Anda. Dengan pengalaman lebih dari 10 tahun, kami siap memberikan layanan terbaik untuk setiap perjalanan Anda.
+              {t.footer.tagline}
             </p>
             <p className="text-ocean font-semibold text-sm italic font-poppins mb-6">
               &ldquo;Your Colorful Journey Starts Here&rdquo;
@@ -79,7 +84,9 @@ export default function Footer() {
 
           {/* Trip Links */}
           <div>
-            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">Paket Trip</h4>
+            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">
+              {language === "en" ? "Trip Packages" : "Paket Trip"}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.trip.map((link) => (
                 <li key={link.label}>
@@ -93,7 +100,9 @@ export default function Footer() {
               ))}
             </ul>
 
-            <h4 className="font-bold text-base mt-8 mb-5 font-poppins text-ocean">Bantuan</h4>
+            <h4 className="font-bold text-base mt-8 mb-5 font-poppins text-ocean">
+              {language === "en" ? "Help" : "Bantuan"}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.bantuan.map((link) => (
                 <li key={link.label}>
@@ -110,12 +119,12 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">Kontak Kami</h4>
+            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">{t.footer.contactInfo}</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-magenta flex-shrink-0 mt-0.5" />
                 <span className="text-white/70 text-sm font-inter">
-                  Jl. Raya Wisata No. 123, Jakarta Selatan, DKI Jakarta 12345
+                  {t.contact.addressValue}
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -140,7 +149,9 @@ export default function Footer() {
 
             {/* Certifications */}
             <div className="mt-6">
-              <p className="text-white/50 text-xs font-inter mb-2">Terdaftar & Berizin:</p>
+              <p className="text-white/50 text-xs font-inter mb-2">
+                {language === "en" ? "Registered & Licensed:" : "Terdaftar & Berizin:"}
+              </p>
               <div className="flex flex-wrap gap-2">
                 <span className="bg-white/10 text-white/70 text-xs px-2 py-1 rounded font-inter">ASITA</span>
                 <span className="bg-white/10 text-white/70 text-xs px-2 py-1 rounded font-inter">IATA</span>
@@ -156,17 +167,17 @@ export default function Footer() {
         <div className="container mx-auto px-4 max-w-7xl py-5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-white/50 text-sm font-inter">
-              &copy; {new Date().getFullYear()} Dzawani Tour. Semua hak dilindungi.
+              &copy; {new Date().getFullYear()} Dzawani Tour. {t.footer.rights}
             </p>
             <div className="flex items-center gap-4">
               <Link href="/faq" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
                 FAQ
               </Link>
               <Link href="/faq?tab=syarat" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
-                Syarat & Ketentuan
+                {t.footer.terms}
               </Link>
               <Link href="/kontak" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
-                Kontak
+                {t.nav.contact}
               </Link>
             </div>
           </div>

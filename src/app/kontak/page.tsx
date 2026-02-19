@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function KontakPage() {
   const [formData, setFormData] = useState({
@@ -14,11 +15,45 @@ export default function KontakPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const { language } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
   };
+
+  const contactItems = [
+    {
+      icon: MapPin,
+      title: language === "en" ? "Office Address" : "Alamat Kantor",
+      content: "Jl. Raya Wisata No. 123, Jakarta Selatan, DKI Jakarta 12345",
+      color: "text-magenta",
+      bg: "bg-magenta-50",
+    },
+    {
+      icon: Phone,
+      title: language === "en" ? "Phone" : "Telepon",
+      content: "+62 812-3456-7890",
+      color: "text-ocean",
+      bg: "bg-ocean-50",
+    },
+    {
+      icon: Mail,
+      title: "Email",
+      content: "info@dzawanitour.com",
+      color: "text-purple",
+      bg: "bg-purple-50",
+    },
+    {
+      icon: Clock,
+      title: language === "en" ? "Operating Hours" : "Jam Operasional",
+      content: language === "en"
+        ? "Monday - Saturday: 08:00 - 20:00 WIB\nSunday: 09:00 - 17:00 WIB"
+        : "Senin - Sabtu: 08.00 - 20.00 WIB\nMinggu: 09.00 - 17.00 WIB",
+      color: "text-sunset",
+      bg: "bg-orange-50",
+    },
+  ];
 
   return (
     <main>
@@ -29,10 +64,12 @@ export default function KontakPage() {
         <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-4">
-            Hubungi Kami
+            {language === "en" ? "Contact Us" : "Hubungi Kami"}
           </h1>
           <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-            Tim kami siap membantu Anda merencanakan perjalanan impian
+            {language === "en"
+              ? "Our team is ready to help you plan your dream trip"
+              : "Tim kami siap membantu Anda merencanakan perjalanan impian"}
           </p>
         </div>
       </div>
@@ -43,43 +80,16 @@ export default function KontakPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-800 font-poppins mb-2">
-                Informasi Kontak
+                {language === "en" ? "Contact Information" : "Informasi Kontak"}
               </h2>
               <p className="text-gray-500 font-inter">
-                Jangan ragu untuk menghubungi kami. Kami siap melayani Anda.
+                {language === "en"
+                  ? "Don't hesitate to contact us. We are ready to serve you."
+                  : "Jangan ragu untuk menghubungi kami. Kami siap melayani Anda."}
               </p>
             </div>
 
-            {[
-              {
-                icon: MapPin,
-                title: "Alamat Kantor",
-                content: "Jl. Raya Wisata No. 123, Jakarta Selatan, DKI Jakarta 12345",
-                color: "text-magenta",
-                bg: "bg-magenta-50",
-              },
-              {
-                icon: Phone,
-                title: "Telepon",
-                content: "+62 812-3456-7890",
-                color: "text-ocean",
-                bg: "bg-ocean-50",
-              },
-              {
-                icon: Mail,
-                title: "Email",
-                content: "info@dzawanitour.com",
-                color: "text-purple",
-                bg: "bg-purple-50",
-              },
-              {
-                icon: Clock,
-                title: "Jam Operasional",
-                content: "Senin - Sabtu: 08.00 - 20.00 WIB\nMinggu: 09.00 - 17.00 WIB",
-                color: "text-sunset",
-                bg: "bg-orange-50",
-              },
-            ].map((item) => {
+            {contactItems.map((item) => {
               const Icon = item.icon;
               return (
                 <div key={item.title} className="flex items-start gap-4">
@@ -103,7 +113,7 @@ export default function KontakPage() {
             >
               <MessageCircle className="w-6 h-6" />
               <div>
-                <p className="text-sm">Chat Langsung via</p>
+                <p className="text-sm">{language === "en" ? "Chat Directly via" : "Chat Langsung via"}</p>
                 <p className="text-lg">WhatsApp</p>
               </div>
             </a>
@@ -118,35 +128,37 @@ export default function KontakPage() {
                     <Send className="w-10 h-10 text-green-500" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 font-poppins mb-2">
-                    Pesan Terkirim!
+                    {language === "en" ? "Message Sent!" : "Pesan Terkirim!"}
                   </h3>
                   <p className="text-gray-500 font-inter">
-                    Terima kasih telah menghubungi kami. Tim kami akan merespons dalam 1x24 jam.
+                    {language === "en"
+                      ? "Thank you for contacting us. Our team will respond within 1x24 hours."
+                      : "Terima kasih telah menghubungi kami. Tim kami akan merespons dalam 1x24 jam."}
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-6 btn-primary"
                   >
-                    Kirim Pesan Lain
+                    {language === "en" ? "Send Another Message" : "Kirim Pesan Lain"}
                   </button>
                 </div>
               ) : (
                 <>
                   <h2 className="text-2xl font-bold text-gray-800 font-poppins mb-6">
-                    Kirim Pesan
+                    {language === "en" ? "Send a Message" : "Kirim Pesan"}
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
-                          Nama Lengkap *
+                          {language === "en" ? "Full Name *" : "Nama Lengkap *"}
                         </label>
                         <input
                           type="text"
                           required
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Masukkan nama lengkap"
+                          placeholder={language === "en" ? "Enter your full name" : "Masukkan nama lengkap"}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean"
                         />
                       </div>
@@ -159,7 +171,7 @@ export default function KontakPage() {
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="email@contoh.com"
+                          placeholder="email@example.com"
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean"
                         />
                       </div>
@@ -167,7 +179,7 @@ export default function KontakPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
-                          Nomor Telepon
+                          {language === "en" ? "Phone Number" : "Nomor Telepon"}
                         </label>
                         <input
                           type="tel"
@@ -179,7 +191,7 @@ export default function KontakPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
-                          Subjek *
+                          {language === "en" ? "Subject *" : "Subjek *"}
                         </label>
                         <select
                           required
@@ -187,31 +199,35 @@ export default function KontakPage() {
                           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean bg-white"
                         >
-                          <option value="">Pilih subjek</option>
-                          <option value="paket-tour">Informasi Paket Tour</option>
-                          <option value="umrah">Paket Umrah</option>
-                          <option value="custom">Custom Tour</option>
-                          <option value="grup">Paket Grup</option>
-                          <option value="lainnya">Lainnya</option>
+                          <option value="">{language === "en" ? "Select subject" : "Pilih subjek"}</option>
+                          <option value="paket-tour">{language === "en" ? "Tour Package Information" : "Informasi Paket Tour"}</option>
+                          <option value="custom">{language === "en" ? "Custom Tour" : "Custom Tour"}</option>
+                          <option value="grup">{language === "en" ? "Group Package" : "Paket Grup"}</option>
+                          <option value="lainnya">{language === "en" ? "Others" : "Lainnya"}</option>
                         </select>
                       </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
-                        Pesan *
+                        {language === "en" ? "Message *" : "Pesan *"}
                       </label>
                       <textarea
                         required
                         rows={5}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Ceritakan rencana perjalanan Anda atau pertanyaan yang ingin Anda ajukan..."
+                        placeholder={language === "en"
+                          ? "Tell us about your travel plans..."
+                          : "Ceritakan rencana perjalanan Anda..."}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean resize-none"
                       />
                     </div>
-                    <button type="submit" className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2">
+                    <button
+                      type="submit"
+                      className="btn-primary w-full py-4 inline-flex items-center justify-center gap-2 text-base"
+                    >
                       <Send className="w-5 h-5" />
-                      Kirim Pesan
+                      {language === "en" ? "Send Message" : "Kirim Pesan"}
                     </button>
                   </form>
                 </>

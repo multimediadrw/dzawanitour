@@ -3,11 +3,11 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { openTripDomestik, openTripInternasional } from "@/lib/data";
 import { MessageCircle, Users, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -20,6 +20,7 @@ function formatRupiah(amount: number) {
 function OpenTripContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"domestik" | "internasional">("domestik");
+  const { language } = useLanguage();
 
   useEffect(() => {
     const kategori = searchParams.get("kategori");
@@ -39,9 +40,13 @@ function OpenTripContent() {
       <div className="bg-ocean-50 border border-ocean/20 rounded-2xl p-5 mb-8 flex items-start gap-3">
         <Users className="w-5 h-5 text-ocean flex-shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-gray-800 font-poppins text-sm">Tentang Open Trip</p>
+          <p className="font-semibold text-gray-800 font-poppins text-sm">
+            {language === "en" ? "About Open Trip" : "Tentang Open Trip"}
+          </p>
           <p className="text-gray-600 font-inter text-sm mt-0.5">
-            Open Trip adalah paket wisata bersama dengan peserta dari berbagai daerah. Cocok untuk solo traveler atau pasangan yang ingin liburan hemat dengan teman baru. Kuota terbatas per keberangkatan.
+            {language === "en"
+              ? "Open Trip is a group travel package with participants from various regions. Perfect for solo travelers or couples who want an affordable holiday with new friends. Limited quota per departure."
+              : "Open Trip adalah paket wisata bersama dengan peserta dari berbagai daerah. Cocok untuk solo traveler atau pasangan yang ingin liburan hemat dengan teman baru. Kuota terbatas per keberangkatan."}
           </p>
         </div>
       </div>
@@ -56,7 +61,7 @@ function OpenTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          Wisata Domestik
+          {language === "en" ? "Domestic Tour" : "Wisata Domestik"}
         </button>
         <button
           onClick={() => setActiveTab("internasional")}
@@ -66,7 +71,7 @@ function OpenTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          Wisata Internasional
+          {language === "en" ? "International Tour" : "Wisata Internasional"}
         </button>
       </div>
 
@@ -74,22 +79,40 @@ function OpenTripContent() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-bold text-gray-800 font-poppins">
-            Open Trip — {activeTab === "domestik" ? "Wisata Domestik" : "Wisata Internasional"}
+            Open Trip — {activeTab === "domestik"
+              ? (language === "en" ? "Domestic Tour" : "Wisata Domestik")
+              : (language === "en" ? "International Tour" : "Wisata Internasional")}
           </h2>
-          <span className="text-sm text-gray-500 font-inter">{data.length} paket tersedia</span>
+          <span className="text-sm text-gray-500 font-inter">
+            {data.length} {language === "en" ? "packages available" : "paket tersedia"}
+          </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Destinasi</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Durasi</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Tanggal Berangkat</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Harga / Pax</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Sisa Kuota</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Status</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Includes</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Destination" : "Destinasi"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Duration" : "Durasi"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Departure Date" : "Tanggal Berangkat"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Price / Pax" : "Harga / Pax"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Remaining Quota" : "Sisa Kuota"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  {language === "en" ? "Status" : "Status"}
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
+                  Includes
+                </th>
                 <th className="px-6 py-4"></th>
               </tr>
             </thead>
@@ -123,12 +146,12 @@ function OpenTripContent() {
                     {item.status === "Tersedia" ? (
                       <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full font-inter">
                         <CheckCircle className="w-3 h-3" />
-                        Tersedia
+                        {language === "en" ? "Available" : "Tersedia"}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-600 text-xs font-medium px-2.5 py-1 rounded-full font-inter">
                         <AlertCircle className="w-3 h-3" />
-                        Hampir Penuh
+                        {language === "en" ? "Almost Full" : "Hampir Penuh"}
                       </span>
                     )}
                   </td>
@@ -143,7 +166,7 @@ function OpenTripContent() {
                       className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
                     >
                       <MessageCircle className="w-3.5 h-3.5" />
-                      Pesan
+                      {language === "en" ? "Book" : "Pesan"}
                     </a>
                   </td>
                 </tr>
@@ -155,9 +178,13 @@ function OpenTripContent() {
 
       {/* CTA */}
       <div className="mt-10 bg-dzawani-gradient rounded-2xl p-8 text-center text-white">
-        <h3 className="text-2xl font-bold font-poppins mb-2">Tidak menemukan jadwal yang cocok?</h3>
+        <h3 className="text-2xl font-bold font-poppins mb-2">
+          {language === "en" ? "Can't find a suitable schedule?" : "Tidak menemukan jadwal yang cocok?"}
+        </h3>
         <p className="text-white/80 font-inter mb-5">
-          Hubungi kami untuk informasi jadwal terbaru atau pertimbangkan paket Private Trip yang lebih fleksibel.
+          {language === "en"
+            ? "Contact us for the latest schedule information or consider our more flexible Private Trip package."
+            : "Hubungi kami untuk informasi jadwal terbaru atau pertimbangkan paket Private Trip yang lebih fleksibel."}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
@@ -167,13 +194,13 @@ function OpenTripContent() {
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
-            Hubungi via WhatsApp
+            {language === "en" ? "Contact via WhatsApp" : "Hubungi via WhatsApp"}
           </a>
           <Link
             href="/private-trip"
             className="bg-white/20 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white/30 transition-all font-poppins"
           >
-            Lihat Private Trip
+            {language === "en" ? "View Private Trip" : "Lihat Private Trip"}
           </Link>
         </div>
       </div>
@@ -182,31 +209,32 @@ function OpenTripContent() {
 }
 
 export default function OpenTripPage() {
+  const { language } = useLanguage();
+
   return (
     <main>
       <Navbar />
 
-      {/* Hero D'Tourkeun */}
+      {/* Hero */}
       <div className="bg-purple pt-36 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-4">
-            <span>✦</span> Open Trip Bareng — Seru, Hemat, Berkesan!
+            <span>✦</span>
+            {language === "en" ? "Open Trip Together — Fun, Affordable, Memorable!" : "Open Trip Bareng — Seru, Hemat, Berkesan!"}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-3">
-            Hayu Urang Jalan-Jalan!
+            {language === "en" ? "Let's Go on an Adventure!" : "Hayu Urang Jalan-Jalan!"}
           </h1>
           <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-            Gabung sareng saderek-saderek ti sakuliah Indonesia — perjalanan hemat, teman anyar, kenangan abadi.
+            {language === "en"
+              ? "Join travelers from all over Indonesia — affordable trips, new friends, lasting memories. Limited quota, register now!"
+              : "Gabung sareng saderek-saderek ti sakuliah Indonesia — perjalanan hemat, teman anyar, kenangan abadi. Kuota terbatas, yuk daftar sekarang!"}
           </p>
         </div>
       </div>
 
-      <Suspense fallback={
-        <div className="container mx-auto px-4 max-w-7xl py-12 text-center">
-          <div className="w-8 h-8 border-4 border-magenta border-t-transparent rounded-full animate-spin mx-auto"></div>
-        </div>
-      }>
+      <Suspense fallback={<div className="py-20 text-center text-gray-400 font-inter">Loading...</div>}>
         <OpenTripContent />
       </Suspense>
 

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, MapPin, Calendar, Users, ChevronRight, Star, Play } from "lucide-react";
+import { Search, MapPin, Calendar, Users, ChevronRight, Star } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const heroSlides = [
   {
@@ -28,8 +29,8 @@ export default function HeroSection() {
     destination: "",
     date: "",
     guests: "2",
-    category: "semua",
   });
+  const { t, language } = useLanguage();
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -37,9 +38,7 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-          style={{
-            backgroundImage: `url(${heroSlides[activeSlide].image})`,
-          }}
+          style={{ backgroundImage: `url(${heroSlides[activeSlide].image})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-purple/80 via-purple/60 to-purple/90" />
         <div className="absolute inset-0 bg-gradient-to-r from-purple/40 to-transparent" />
@@ -56,29 +55,26 @@ export default function HeroSection() {
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
             <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
             <span className="text-white text-sm font-medium font-inter">
-              #1 Travel Agency Terpercaya di Indonesia
+              {t.hero.badge}
             </span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white font-poppins leading-tight mb-4">
-            Your{" "}
-            <span className="text-ocean">Colorful</span>
+            {t.hero.title1}{" "}
+            <span className="text-ocean">{t.hero.title2}</span>
             <br />
-            Journey{" "}
-            <span className="text-magenta">Starts</span>
-            <br />
-            Here.
+            <span className="text-magenta">{t.hero.title3}</span>
           </h1>
 
           <p className="text-white/80 text-lg md:text-xl font-inter mb-8 max-w-xl leading-relaxed">
-            Temukan paket wisata terbaik ke destinasi impian Anda. Dari Sabang sampai Merauke, hingga penjuru dunia — bersama Dzawani Tour, setiap perjalanan adalah petualangan.
+            {t.hero.subtitle}
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4 mb-12">
             <Link href="/open-trip" className="btn-primary text-base py-3.5 px-8 inline-flex items-center gap-2">
-              Lihat Open Trip
+              {language === "en" ? "View Open Trip" : "Lihat Open Trip"}
               <ChevronRight className="w-5 h-5" />
             </Link>
             <Link href="/private-trip" className="btn-outline-white text-base py-3.5 px-8 inline-flex items-center gap-2">
@@ -90,9 +86,9 @@ export default function HeroSection() {
           {/* Stats */}
           <div className="flex flex-wrap gap-8">
             {[
-              { value: "15,000+", label: "Wisatawan Puas" },
-              { value: "50+", label: "Destinasi" },
-              { value: "10+", label: "Tahun Pengalaman" },
+              { value: "15,000+", label: t.hero.happyTravelers },
+              { value: "50+", label: t.hero.destinations },
+              { value: "10+", label: t.hero.yearsExperience },
             ].map((stat) => (
               <div key={stat.label}>
                 <p className="text-3xl font-bold text-white font-poppins">{stat.value}</p>
@@ -105,21 +101,21 @@ export default function HeroSection() {
         {/* Search Box */}
         <div className="mt-12 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
           <h3 className="text-white font-semibold font-poppins mb-4 text-lg">
-            Cari Paket Tour Impian Anda
+            {language === "en" ? "Find Your Dream Tour Package" : "Cari Paket Tour Impian Anda"}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Destination */}
             <div className="relative">
-              <label className="block text-white/70 text-xs font-inter mb-1.5">Destinasi</label>
+              <label className="block text-white/70 text-xs font-inter mb-1.5">
+                {language === "en" ? "Destination" : "Destinasi"}
+              </label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <input
                   type="text"
-                  placeholder="Mau ke mana?"
+                  placeholder={language === "en" ? "Where to?" : "Mau ke mana?"}
                   value={searchData.destination}
-                  onChange={(e) =>
-                    setSearchData({ ...searchData, destination: e.target.value })
-                  }
+                  onChange={(e) => setSearchData({ ...searchData, destination: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-white/40 text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all"
                 />
               </div>
@@ -127,15 +123,15 @@ export default function HeroSection() {
 
             {/* Date */}
             <div>
-              <label className="block text-white/70 text-xs font-inter mb-1.5">Tanggal Berangkat</label>
+              <label className="block text-white/70 text-xs font-inter mb-1.5">
+                {language === "en" ? "Departure Date" : "Tanggal Berangkat"}
+              </label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <input
                   type="date"
                   value={searchData.date}
-                  onChange={(e) =>
-                    setSearchData({ ...searchData, date: e.target.value })
-                  }
+                  onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-white/40 text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all"
                 />
               </div>
@@ -143,22 +139,24 @@ export default function HeroSection() {
 
             {/* Guests */}
             <div>
-              <label className="block text-white/70 text-xs font-inter mb-1.5">Jumlah Orang</label>
+              <label className="block text-white/70 text-xs font-inter mb-1.5">
+                {language === "en" ? "Number of People" : "Jumlah Orang"}
+              </label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <select
                   value={searchData.guests}
-                  onChange={(e) =>
-                    setSearchData({ ...searchData, guests: e.target.value })
-                  }
+                  onChange={(e) => setSearchData({ ...searchData, guests: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all appearance-none"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                     <option key={n} value={n} className="text-gray-800">
-                      {n} Orang
+                      {n} {language === "en" ? "Person" : "Orang"}
                     </option>
                   ))}
-                  <option value="10+" className="text-gray-800">10+ Orang (Grup)</option>
+                  <option value="10+" className="text-gray-800">
+                    10+ {language === "en" ? "People (Group)" : "Orang (Grup)"}
+                  </option>
                 </select>
               </div>
             </div>
@@ -167,7 +165,7 @@ export default function HeroSection() {
             <div className="flex items-end">
               <button className="w-full btn-primary py-3 flex items-center justify-center gap-2">
                 <Search className="w-5 h-5" />
-                Cari Sekarang
+                {language === "en" ? "Search Now" : "Cari Sekarang"}
               </button>
             </div>
           </div>
@@ -176,14 +174,12 @@ export default function HeroSection() {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-8 right-8 flex items-center gap-2">
-        {heroSlides.map((slide, index) => (
+        {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => setActiveSlide(index)}
             className={`transition-all duration-300 rounded-full ${
-              activeSlide === index
-                ? "w-8 h-3 bg-magenta"
-                : "w-3 h-3 bg-white/40 hover:bg-white/60"
+              activeSlide === index ? "w-8 h-3 bg-magenta" : "w-3 h-3 bg-white/40 hover:bg-white/60"
             }`}
           />
         ))}

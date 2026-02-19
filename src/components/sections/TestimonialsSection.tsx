@@ -1,21 +1,28 @@
+"use client";
+
 import Image from "next/image";
 import { Star, Quote } from "lucide-react";
 import { testimonials } from "@/lib/data";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function TestimonialsSection() {
+  const { language } = useLanguage();
+
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-12">
           <span className="inline-block text-magenta font-semibold text-sm font-inter uppercase tracking-wider mb-3">
-            Testimoni
+            {language === "en" ? "Testimonials" : "Testimoni"}
           </span>
           <h2 className="section-title mb-4">
-            Apa Kata Mereka Tentang Kami?
+            {language === "en" ? "What They Say About Us" : "Apa Kata Mereka Tentang Kami?"}
           </h2>
           <p className="section-subtitle max-w-2xl mx-auto">
-            Kepuasan pelanggan adalah prioritas utama kami. Simak pengalaman nyata dari para wisatawan yang telah mempercayakan perjalanan mereka kepada Dzawani Tour.
+            {language === "en"
+              ? "Customer satisfaction is our top priority. Read real experiences from travelers who have trusted their journeys to Dzawani Tour."
+              : "Kepuasan pelanggan adalah prioritas utama kami. Simak pengalaman nyata dari para wisatawan yang telah mempercayakan perjalanan mereka kepada Dzawani Tour."}
           </p>
         </div>
 
@@ -28,14 +35,16 @@ export default function TestimonialsSection() {
                 <Star key={star} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
               ))}
             </div>
-            <p className="text-gray-500 text-sm font-inter mt-1">Rating Keseluruhan</p>
+            <p className="text-gray-500 text-sm font-inter mt-1">
+              {language === "en" ? "Overall Rating" : "Rating Keseluruhan"}
+            </p>
           </div>
           <div className="w-px h-16 bg-gray-200 hidden md:block" />
           <div className="grid grid-cols-3 gap-6">
             {[
-              { label: "Pelayanan", value: "4.9" },
-              { label: "Harga", value: "4.8" },
-              { label: "Kenyamanan", value: "5.0" },
+              { label: language === "en" ? "Service" : "Pelayanan", value: "4.9" },
+              { label: language === "en" ? "Price" : "Harga", value: "4.8" },
+              { label: language === "en" ? "Comfort" : "Kenyamanan", value: "5.0" },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <p className="text-2xl font-bold text-magenta font-poppins">{item.value}</p>
@@ -46,7 +55,9 @@ export default function TestimonialsSection() {
           <div className="w-px h-16 bg-gray-200 hidden md:block" />
           <div className="text-center">
             <p className="text-3xl font-bold text-purple font-poppins">1,800+</p>
-            <p className="text-gray-500 text-sm font-inter">Total Ulasan</p>
+            <p className="text-gray-500 text-sm font-inter">
+              {language === "en" ? "Total Reviews" : "Total Ulasan"}
+            </p>
           </div>
         </div>
 

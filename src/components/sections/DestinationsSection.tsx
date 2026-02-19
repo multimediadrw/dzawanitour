@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 import { destinations } from "@/lib/data";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function DestinationsSection() {
+  const { language } = useLanguage();
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -11,20 +16,22 @@ export default function DestinationsSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <span className="inline-block text-magenta font-semibold text-sm font-inter uppercase tracking-wider mb-3">
-              Destinasi Populer
+              {language === "en" ? "Popular Destinations" : "Destinasi Populer"}
             </span>
             <h2 className="section-title">
-              Jelajahi Destinasi Impian
+              {language === "en" ? "Explore Your Dream Destinations" : "Jelajahi Destinasi Impian"}
             </h2>
             <p className="section-subtitle max-w-lg">
-              Dari keindahan alam Nusantara hingga pesona negeri-negeri jauh, temukan destinasi yang sempurna untuk Anda.
+              {language === "en"
+                ? "From the natural beauty of the Archipelago to the charm of distant lands, find the perfect destination for you."
+                : "Dari keindahan alam Nusantara hingga pesona negeri-negeri jauh, temukan destinasi yang sempurna untuk Anda."}
             </p>
           </div>
           <Link
-            href="/destinasi"
+            href="/open-trip"
             className="btn-secondary inline-flex items-center gap-2 text-sm flex-shrink-0"
           >
-            Semua Destinasi
+            {language === "en" ? "All Destinations" : "Semua Destinasi"}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -34,7 +41,7 @@ export default function DestinationsSection() {
           {destinations.map((dest, index) => (
             <Link
               key={dest.id}
-              href={`/destinasi/${dest.id}`}
+              href={`/open-trip`}
               className={`group relative rounded-2xl overflow-hidden cursor-pointer ${
                 index === 0 ? "col-span-2 row-span-2 md:col-span-2 md:row-span-2" : ""
               }`}
@@ -62,7 +69,9 @@ export default function DestinationsSection() {
                 <h3 className={`text-white font-bold font-poppins ${index === 0 ? "text-2xl" : "text-sm"}`}>
                   {dest.name}
                 </h3>
-                <p className="text-white/60 text-xs font-inter">{dest.packageCount} paket tersedia</p>
+                <p className="text-white/60 text-xs font-inter">
+                  {dest.packageCount} {language === "en" ? "packages available" : "paket tersedia"}
+                </p>
               </div>
 
               {/* Hover Overlay */}
