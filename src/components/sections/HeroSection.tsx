@@ -77,14 +77,14 @@ export default function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-4 mb-12">
-            <Link href="/paket" className="btn-primary text-base py-3.5 px-8 inline-flex items-center gap-2">
-              Jelajahi Paket Tour
+            <Link href="/open-trip" className="btn-primary text-base py-3.5 px-8 inline-flex items-center gap-2">
+              Lihat Open Trip
               <ChevronRight className="w-5 h-5" />
             </Link>
-            <button className="btn-outline-white text-base py-3.5 px-8 inline-flex items-center gap-2">
-              <Play className="w-5 h-5 fill-white" />
-              Lihat Video
-            </button>
+            <Link href="/private-trip" className="btn-outline-white text-base py-3.5 px-8 inline-flex items-center gap-2">
+              Private Trip
+              <ChevronRight className="w-5 h-5" />
+            </Link>
           </div>
 
           {/* Stats */}

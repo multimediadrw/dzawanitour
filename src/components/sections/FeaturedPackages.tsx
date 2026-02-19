@@ -10,7 +10,6 @@ const categories = [
   { id: "semua", label: "Semua Paket" },
   { id: "domestik", label: "Wisata Domestik" },
   { id: "internasional", label: "Wisata Internasional" },
-  { id: "umrah", label: "Paket Umrah" },
 ];
 
 export default function FeaturedPackages() {
@@ -33,7 +32,7 @@ export default function FeaturedPackages() {
             Temukan Paket Tour Terbaik
           </h2>
           <p className="section-subtitle max-w-2xl mx-auto">
-            Dari wisata domestik yang memukau hingga petualangan internasional yang tak terlupakan, kami memiliki paket yang tepat untuk Anda.
+            Dari wisata domestik yang memukau hingga petualangan internasional yang tak terlupakan, tersedia dalam format Open Trip maupun Private Trip.
           </p>
         </div>
 
@@ -61,13 +60,20 @@ export default function FeaturedPackages() {
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-10">
+        {/* View All Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
           <Link
-            href="/paket"
+            href="/open-trip"
+            className="btn-primary inline-flex items-center gap-2 text-base"
+          >
+            Lihat Open Trip
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link
+            href="/private-trip"
             className="btn-secondary inline-flex items-center gap-2 text-base"
           >
-            Lihat Semua Paket
+            Lihat Private Trip
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

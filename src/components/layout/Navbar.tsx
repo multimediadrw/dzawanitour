@@ -7,17 +7,22 @@ import { Menu, X, Phone, ChevronDown } from "lucide-react";
 const navLinks = [
   { label: "Beranda", href: "/" },
   {
-    label: "Paket Tour",
-    href: "/paket",
+    label: "Open Trip",
+    href: "/open-trip",
     children: [
-      { label: "Wisata Domestik", href: "/paket?kategori=domestik" },
-      { label: "Wisata Internasional", href: "/paket?kategori=internasional" },
-      { label: "Paket Umrah", href: "/paket?kategori=umrah" },
+      { label: "Wisata Domestik", href: "/open-trip?kategori=domestik" },
+      { label: "Wisata Internasional", href: "/open-trip?kategori=internasional" },
     ],
   },
-  { label: "Destinasi", href: "/destinasi" },
-  { label: "Blog", href: "/blog" },
-  { label: "Tentang Kami", href: "/tentang" },
+  {
+    label: "Private Trip",
+    href: "/private-trip",
+    children: [
+      { label: "Wisata Domestik", href: "/private-trip?kategori=domestik" },
+      { label: "Wisata Internasional", href: "/private-trip?kategori=internasional" },
+    ],
+  },
+  { label: "FAQ", href: "/faq" },
   { label: "Kontak", href: "/kontak" },
 ];
 
@@ -119,7 +124,7 @@ export default function Navbar() {
               <Phone className="w-4 h-4" />
               <span>+62 812-3456-7890</span>
             </a>
-            <Link href="/paket" className="btn-primary text-sm py-2.5 px-5">
+            <Link href="/kontak" className="btn-primary text-sm py-2.5 px-5">
               Pesan Sekarang
             </Link>
           </div>
@@ -165,7 +170,7 @@ export default function Navbar() {
             ))}
             <div className="p-4">
               <Link
-                href="/paket"
+                href="/kontak"
                 onClick={() => setIsOpen(false)}
                 className="btn-primary w-full text-center block"
               >

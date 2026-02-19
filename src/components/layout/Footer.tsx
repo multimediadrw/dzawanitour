@@ -2,25 +2,15 @@ import Link from "next/link";
 import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, MessageCircle } from "lucide-react";
 
 const footerLinks = {
-  paket: [
-    { label: "Wisata Domestik", href: "/paket?kategori=domestik" },
-    { label: "Wisata Internasional", href: "/paket?kategori=internasional" },
-    { label: "Paket Umrah", href: "/paket?kategori=umrah" },
-    { label: "Paket Honeymoon", href: "/paket?kategori=honeymoon" },
-    { label: "Paket Grup", href: "/paket?kategori=grup" },
-  ],
-  perusahaan: [
-    { label: "Tentang Kami", href: "/tentang" },
-    { label: "Tim Kami", href: "/tentang#tim" },
-    { label: "Karir", href: "/karir" },
-    { label: "Blog & Tips", href: "/blog" },
-    { label: "Galeri", href: "/galeri" },
+  trip: [
+    { label: "Open Trip Domestik", href: "/open-trip?kategori=domestik" },
+    { label: "Open Trip Internasional", href: "/open-trip?kategori=internasional" },
+    { label: "Private Trip Domestik", href: "/private-trip?kategori=domestik" },
+    { label: "Private Trip Internasional", href: "/private-trip?kategori=internasional" },
   ],
   bantuan: [
     { label: "FAQ", href: "/faq" },
-    { label: "Cara Pemesanan", href: "/cara-pemesanan" },
-    { label: "Kebijakan Privasi", href: "/privasi" },
-    { label: "Syarat & Ketentuan", href: "/syarat" },
+    { label: "Syarat & Ketentuan", href: "/faq?tab=syarat" },
     { label: "Kontak Kami", href: "/kontak" },
   ],
 };
@@ -30,7 +20,7 @@ export default function Footer() {
     <footer className="bg-purple text-white">
       {/* Main Footer */}
       <div className="container mx-auto px-4 max-w-7xl py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-5">
@@ -86,11 +76,11 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Paket Links */}
+          {/* Trip Links */}
           <div>
-            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">Paket Tour</h4>
+            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">Paket Trip</h4>
             <ul className="space-y-3">
-              {footerLinks.paket.map((link) => (
+              {footerLinks.trip.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
@@ -101,13 +91,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
 
-          {/* Perusahaan Links */}
-          <div>
-            <h4 className="font-bold text-base mb-5 font-poppins text-ocean">Perusahaan</h4>
+            <h4 className="font-bold text-base mt-8 mb-5 font-poppins text-ocean">Bantuan</h4>
             <ul className="space-y-3">
-              {footerLinks.perusahaan.map((link) => (
+              {footerLinks.bantuan.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
@@ -171,14 +158,14 @@ export default function Footer() {
               &copy; {new Date().getFullYear()} Dzawani Tour. Semua hak dilindungi.
             </p>
             <div className="flex items-center gap-4">
-              <Link href="/privasi" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
-                Kebijakan Privasi
+              <Link href="/faq" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
+                FAQ
               </Link>
-              <Link href="/syarat" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
+              <Link href="/faq?tab=syarat" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
                 Syarat & Ketentuan
               </Link>
-              <Link href="/sitemap" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
-                Sitemap
+              <Link href="/kontak" className="text-white/50 hover:text-white text-sm transition-colors font-inter">
+                Kontak
               </Link>
             </div>
           </div>

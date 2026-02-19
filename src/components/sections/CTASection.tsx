@@ -25,10 +25,10 @@ export default function CTASection() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
-            href="/paket"
+            href="/open-trip"
             className="bg-white text-purple font-bold py-4 px-8 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 font-poppins inline-flex items-center gap-2"
           >
-            Lihat Semua Paket
+            Lihat Open Trip
             <ArrowRight className="w-5 h-5" />
           </Link>
           <a
