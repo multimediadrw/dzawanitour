@@ -48,7 +48,7 @@ export default function Navbar() {
   // Logo config berdasarkan halaman
   const logoSrc = isOpenTripPage ? "/logo-dtourkeun.png" : "/logo.png";
   const logoAlt = isOpenTripPage ? "D'Tourkeun by Dzawani Tour" : "Dzawani Tour";
-  const logoWidth = isOpenTripPage ? 240 : 200;
+  const logoWidth = 200;
 
   return (
     <nav
@@ -67,7 +67,7 @@ export default function Navbar() {
               alt={logoAlt}
               width={logoWidth}
               height={75}
-              className={`h-16 w-auto transition-all duration-300 ${
+              className={`h-10 w-auto transition-all duration-300 ${
                 isScrolled
                   ? "brightness-100"
                   : isOpenTripPage
