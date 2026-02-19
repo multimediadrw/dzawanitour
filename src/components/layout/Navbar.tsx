@@ -67,7 +67,7 @@ export default function Navbar() {
               alt={logoAlt}
               width={logoWidth}
               height={75}
-              className={`h-14 w-auto transition-all duration-300 ${
+              className={`h-20 w-auto transition-all duration-300 ${
                 isScrolled
                   ? "brightness-100"
                   : isOpenTripPage
