@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { openTripDomestik, openTripInternasional } from "@/lib/data";
@@ -185,16 +186,38 @@ export default function OpenTripPage() {
     <main>
       <Navbar />
 
-      {/* Hero */}
-      <div className="bg-purple pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
-        <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-3">
-            Open Trip
-          </h1>
-          <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-            Bergabung bersama wisatawan lain dengan harga terjangkau dan jadwal yang sudah tersedia
-          </p>
+      {/* Hero D'Tourkeun */}
+      <div className="bg-white pt-28 pb-12 relative overflow-hidden border-b-4 border-magenta/20">
+        {/* Dekorasi latar belakang */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-magenta/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="relative z-10 container mx-auto px-4 max-w-7xl">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            {/* Logo D'Tourkeun besar */}
+            <div className="flex-shrink-0">
+              <Image
+                src="/logo-dtourkeun.png"
+                alt="D'Tourkeun by Dzawani Tour"
+                width={320}
+                height={120}
+                className="h-24 md:h-28 w-auto"
+                priority
+              />
+            </div>
+            {/* Teks hero */}
+            <div className="text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-magenta/10 text-magenta text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-3">
+                <span>✦</span> Open Trip Bareng — Seru, Hemat, Berkesan!
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold font-poppins text-purple leading-tight mb-2">
+                Hayu Urang Jalan-Jalan!{" "}
+                <span className="text-magenta">Bareng D&apos;Tourkeun</span>
+              </h1>
+              <p className="text-gray-500 font-inter text-base max-w-xl">
+                Gabung sareng saderek-saderek ti sakuliah Indonesia — perjalanan hemat, teman anyar, kenangan abadi. Kuota terbatas, yuk daftar sekarang!
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

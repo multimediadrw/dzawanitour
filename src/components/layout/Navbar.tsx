@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 
 const navLinks = [
@@ -32,6 +33,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  const isOpenTripPage = pathname?.startsWith("/open-trip");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +44,11 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Logo config berdasarkan halaman
+  const logoSrc = isOpenTripPage ? "/logo-dtourkeun.png" : "/logo.png";
+  const logoAlt = isOpenTripPage ? "D'Tourkeun by Dzawani Tour" : "Dzawani Tour";
+  const logoWidth = isOpenTripPage ? 240 : 200;
 
   return (
     <nav
@@ -51,14 +60,20 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
+          {/* Logo — berubah dinamis sesuai halaman */}
+          <Link href={isOpenTripPage ? "/open-trip" : "/"} className="flex items-center">
             <Image
-              src="/logo.png"
-              alt="Dzawani Tour"
-              width={200}
+              src={logoSrc}
+              alt={logoAlt}
+              width={logoWidth}
               height={75}
-              className={`h-16 w-auto transition-all duration-300 ${isScrolled ? "brightness-100" : "brightness-0 invert"}`}
+              className={`h-16 w-auto transition-all duration-300 ${
+                isScrolled
+                  ? "brightness-100"
+                  : isOpenTripPage
+                    ? "brightness-100"   // logo D'Tourkeun sudah berwarna, tampilkan asli
+                    : "brightness-0 invert"
+              }`}
               priority
             />
           </Link>
@@ -75,7 +90,7 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors font-inter ${
-                    isScrolled
+                    isScrolled || isOpenTripPage
                       ? "text-gray-700 hover:text-magenta hover:bg-magenta-50"
                       : "text-white/90 hover:text-white hover:bg-white/10"
                   }`}
@@ -109,7 +124,7 @@ export default function Navbar() {
             <a
               href="tel:+6281234567890"
               className={`flex items-center gap-2 text-sm font-medium transition-colors font-inter ${
-                isScrolled ? "text-gray-600 hover:text-magenta" : "text-white/90 hover:text-white"
+                isScrolled || isOpenTripPage ? "text-gray-600 hover:text-magenta" : "text-white/90 hover:text-white"
               }`}
             >
               <Phone className="w-4 h-4" />
@@ -124,7 +139,7 @@ export default function Navbar() {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className={`lg:hidden p-2 rounded-lg transition-colors ${
-              isScrolled ? "text-gray-700 hover:bg-gray-100" : "text-white hover:bg-white/10"
+              isScrolled || isOpenTripPage ? "text-gray-700 hover:bg-gray-100" : "text-white hover:bg-white/10"
             }`}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
