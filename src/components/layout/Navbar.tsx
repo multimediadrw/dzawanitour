@@ -56,9 +56,9 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="Dzawani Tour"
-              width={160}
-              height={60}
-              className={`h-12 w-auto transition-all duration-300 ${isScrolled ? "brightness-100" : "brightness-0 invert"}`}
+              width={200}
+              height={75}
+              className={`h-16 w-auto transition-all duration-300 ${isScrolled ? "brightness-100" : "brightness-0 invert"}`}
               priority
             />
           </Link>

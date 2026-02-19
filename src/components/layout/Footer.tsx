@@ -28,9 +28,9 @@ export default function Footer() {
               <Image
                 src="/logo.png"
                 alt="Dzawani Tour"
-                width={160}
-                height={60}
-                className="h-12 w-auto brightness-0 invert"
+                width={200}
+                height={75}
+                className="h-16 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-white/70 text-sm leading-relaxed font-inter mb-6 max-w-xs">
