@@ -63,15 +63,13 @@ export default function Navbar() {
           {/* Logo — BESAR di open-trip, normal di halaman lain */}
           <Link href={isOpenTripPage ? "/open-trip" : "/"} className="flex items-center">
             {isOpenTripPage ? (
-              /* Logo D'Tourkeun — BESAR dan MENCOLOK */
+              /* Logo D'Tourkeun — ukuran sama dengan logo Dzawani Tour */
               <Image
                 src="/logo-dtourkeun.png"
                 alt="D'Tourkeun by Dzawani Tour"
-                width={400}
-                height={120}
-                className={`w-auto transition-all duration-500 ${
-                  isScrolled ? "h-16" : "h-24"
-                }`}
+                width={200}
+                height={75}
+                className="h-16 w-auto transition-all duration-300"
                 priority
               />
             ) : (
