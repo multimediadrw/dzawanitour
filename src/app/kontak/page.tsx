@@ -1,0 +1,227 @@
+"use client";
+
+import { useState } from "react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from "lucide-react";
+
+export default function KontakPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  return (
+    <main>
+      <Navbar />
+
+      {/* Hero */}
+      <div className="bg-purple pt-28 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
+        <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-4">
+            Hubungi Kami
+          </h1>
+          <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
+            Tim kami siap membantu Anda merencanakan perjalanan impian
+          </p>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 max-w-7xl py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Contact Info */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 font-poppins mb-2">
+                Informasi Kontak
+              </h2>
+              <p className="text-gray-500 font-inter">
+                Jangan ragu untuk menghubungi kami. Kami siap melayani Anda.
+              </p>
+            </div>
+
+            {[
+              {
+                icon: MapPin,
+                title: "Alamat Kantor",
+                content: "Jl. Raya Wisata No. 123, Jakarta Selatan, DKI Jakarta 12345",
+                color: "text-magenta",
+                bg: "bg-magenta-50",
+              },
+              {
+                icon: Phone,
+                title: "Telepon",
+                content: "+62 812-3456-7890",
+                color: "text-ocean",
+                bg: "bg-ocean-50",
+              },
+              {
+                icon: Mail,
+                title: "Email",
+                content: "info@dzawanitour.com",
+                color: "text-purple",
+                bg: "bg-purple-50",
+              },
+              {
+                icon: Clock,
+                title: "Jam Operasional",
+                content: "Senin - Sabtu: 08.00 - 20.00 WIB\nMinggu: 09.00 - 17.00 WIB",
+                color: "text-sunset",
+                bg: "bg-orange-50",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="flex items-start gap-4">
+                  <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`w-6 h-6 ${item.color}`} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 font-poppins">{item.title}</p>
+                    <p className="text-gray-500 text-sm font-inter whitespace-pre-line">{item.content}</p>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* WhatsApp CTA */}
+            <a
+              href="https://wa.me/6281234567890"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-lg font-poppins"
+            >
+              <MessageCircle className="w-6 h-6" />
+              <div>
+                <p className="text-sm">Chat Langsung via</p>
+                <p className="text-lg">WhatsApp</p>
+              </div>
+            </a>
+          </div>
+
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+              {submitted ? (
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Send className="w-10 h-10 text-green-500" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 font-poppins mb-2">
+                    Pesan Terkirim!
+                  </h3>
+                  <p className="text-gray-500 font-inter">
+                    Terima kasih telah menghubungi kami. Tim kami akan merespons dalam 1x24 jam.
+                  </p>
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="mt-6 btn-primary"
+                  >
+                    Kirim Pesan Lain
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-2xl font-bold text-gray-800 font-poppins mb-6">
+                    Kirim Pesan
+                  </h2>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
+                          Nama Lengkap *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Masukkan nama lengkap"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="email@contoh.com"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
+                          Nomor Telepon
+                        </label>
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+62 8xx-xxxx-xxxx"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
+                          Subjek *
+                        </label>
+                        <select
+                          required
+                          value={formData.subject}
+                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean bg-white"
+                        >
+                          <option value="">Pilih subjek</option>
+                          <option value="paket-tour">Informasi Paket Tour</option>
+                          <option value="umrah">Paket Umrah</option>
+                          <option value="custom">Custom Tour</option>
+                          <option value="grup">Paket Grup</option>
+                          <option value="lainnya">Lainnya</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 font-inter mb-1.5">
+                        Pesan *
+                      </label>
+                      <textarea
+                        required
+                        rows={5}
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder="Ceritakan rencana perjalanan Anda atau pertanyaan yang ingin Anda ajukan..."
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm font-inter focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean resize-none"
+                      />
+                    </div>
+                    <button type="submit" className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2">
+                      <Send className="w-5 h-5" />
+                      Kirim Pesan
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
+}
