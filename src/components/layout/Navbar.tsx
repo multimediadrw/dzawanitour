@@ -23,6 +23,7 @@ const navLinks = [
     ],
   },
   { label: "FAQ", href: "/faq" },
+  { label: "Tentang", href: "/tentang" },
   { label: "Kontak", href: "/kontak" },
 ];
 
