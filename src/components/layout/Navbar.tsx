@@ -47,29 +47,25 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isOpenTripPage
-          ? isScrolled
-            ? "bg-white shadow-lg py-2"
-            : "bg-white/95 backdrop-blur-sm shadow-md py-1"
-          : isScrolled
-            ? "bg-white shadow-lg py-3"
-            : "bg-transparent py-5"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white shadow-lg py-3"
+          : "bg-transparent py-5"
       }`}
     >
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between">
 
-          {/* Logo — BESAR di open-trip, normal di halaman lain */}
+          {/* Logo */}
           <Link href={isOpenTripPage ? "/open-trip" : "/"} className="flex items-center">
             {isOpenTripPage ? (
-              /* Logo D'Tourkeun — ukuran sama dengan logo Dzawani Tour */
+              /* Logo D'Tourkeun — tinggi proporsional sama dengan Dzawani Tour */
               <Image
                 src="/logo-dtourkeun.png"
                 alt="D'Tourkeun by Dzawani Tour"
-                width={200}
-                height={75}
-                className="h-16 w-auto transition-all duration-300"
+                width={160}
+                height={50}
+                className="h-10 w-auto"
                 priority
               />
             ) : (
@@ -77,9 +73,9 @@ export default function Navbar() {
               <Image
                 src="/logo.png"
                 alt="Dzawani Tour"
-                width={200}
-                height={75}
-                className={`h-16 w-auto transition-all duration-300 ${
+                width={120}
+                height={50}
+                className={`h-10 w-auto transition-all duration-300 ${
                   isScrolled ? "brightness-100" : "brightness-0 invert"
                 }`}
                 priority
@@ -99,7 +95,7 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors font-inter ${
-                    isScrolled || isOpenTripPage
+                    isScrolled
                       ? "text-gray-700 hover:text-magenta hover:bg-magenta-50"
                       : "text-white/90 hover:text-white hover:bg-white/10"
                   }`}
@@ -133,7 +129,7 @@ export default function Navbar() {
             <a
               href="tel:+6281234567890"
               className={`flex items-center gap-2 text-sm font-medium transition-colors font-inter ${
-                isScrolled || isOpenTripPage ? "text-gray-600 hover:text-magenta" : "text-white/90 hover:text-white"
+                isScrolled ? "text-gray-600 hover:text-magenta" : "text-white/90 hover:text-white"
               }`}
             >
               <Phone className="w-4 h-4" />
@@ -148,7 +144,7 @@ export default function Navbar() {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className={`lg:hidden p-2 rounded-lg transition-colors ${
-              isScrolled || isOpenTripPage ? "text-gray-700 hover:bg-gray-100" : "text-white hover:bg-white/10"
+              isScrolled ? "text-gray-700 hover:bg-gray-100" : "text-white hover:bg-white/10"
             }`}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
