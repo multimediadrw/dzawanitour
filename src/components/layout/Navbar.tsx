@@ -45,37 +45,48 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Logo config berdasarkan halaman
-  const logoSrc = isOpenTripPage ? "/logo-dtourkeun.png" : "/logo.png";
-  const logoAlt = isOpenTripPage ? "D'Tourkeun by Dzawani Tour" : "Dzawani Tour";
-  const logoWidth = 200;
-
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white shadow-lg py-3"
-          : "bg-transparent py-5"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isOpenTripPage
+          ? isScrolled
+            ? "bg-white shadow-lg py-2"
+            : "bg-white/95 backdrop-blur-sm shadow-md py-1"
+          : isScrolled
+            ? "bg-white shadow-lg py-3"
+            : "bg-transparent py-5"
       }`}
     >
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between">
-          {/* Logo — berubah dinamis sesuai halaman */}
+
+          {/* Logo — BESAR di open-trip, normal di halaman lain */}
           <Link href={isOpenTripPage ? "/open-trip" : "/"} className="flex items-center">
-            <Image
-              src={logoSrc}
-              alt={logoAlt}
-              width={logoWidth}
-              height={75}
-              className={`h-16 w-auto transition-all duration-300 ${
-                isScrolled
-                  ? "brightness-100"
-                  : isOpenTripPage
-                    ? "brightness-100"   // logo D'Tourkeun sudah berwarna, tampilkan asli
-                    : "brightness-0 invert"
-              }`}
-              priority
-            />
+            {isOpenTripPage ? (
+              /* Logo D'Tourkeun — BESAR dan MENCOLOK */
+              <Image
+                src="/logo-dtourkeun.png"
+                alt="D'Tourkeun by Dzawani Tour"
+                width={400}
+                height={120}
+                className={`w-auto transition-all duration-500 ${
+                  isScrolled ? "h-16" : "h-24"
+                }`}
+                priority
+              />
+            ) : (
+              /* Logo Dzawani Tour — normal */
+              <Image
+                src="/logo.png"
+                alt="Dzawani Tour"
+                width={200}
+                height={75}
+                className={`h-16 w-auto transition-all duration-300 ${
+                  isScrolled ? "brightness-100" : "brightness-0 invert"
+                }`}
+                priority
+              />
+            )}
           </Link>
 
           {/* Desktop Navigation */}
