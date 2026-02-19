@@ -127,7 +127,7 @@ export default function Navbar() {
 
           {/* CTA Buttons + Language Switcher */}
           <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher />
+            <LanguageSwitcher isScrolled={isScrolled} />
             <a
               href="tel:+6281234567890"
               className={`flex items-center gap-2 text-sm font-medium transition-colors font-inter ${
@@ -183,7 +183,7 @@ export default function Navbar() {
             ))}
             <div className="p-4 flex flex-col gap-3">
               <div className="flex justify-center">
-                <LanguageSwitcher />
+                <LanguageSwitcher isScrolled={isScrolled} />
               </div>
               <Link
                 href="/kontak"
