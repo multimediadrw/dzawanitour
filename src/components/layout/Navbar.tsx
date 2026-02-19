@@ -75,7 +75,7 @@ export default function Navbar() {
                 alt="Dzawani Tour"
                 width={120}
                 height={50}
-                className={`h-14 w-auto transition-all duration-300 ${
+                className={`h-20 w-auto transition-all duration-300 ${
                   isScrolled ? "brightness-100" : "brightness-0 invert"
                 }`}
                 priority
