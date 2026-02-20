@@ -26,7 +26,7 @@ export default function KontakPage() {
     {
       icon: MapPin,
       title: language === "en" ? "Office Address" : "Alamat Kantor",
-      content: "Jl. Raya Wisata No. 123, Jakarta Selatan, DKI Jakarta 12345",
+      content: "Jl. Leuwisari Raya No.IV, RW.6, Kb. Lega, Kec. Bojongloa Kidul, Kota Bandung, Jawa Barat 40235",
       color: "text-magenta",
       bg: "bg-magenta-50",
     },

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
@@ -67,7 +67,9 @@ export default function Navbar() {
                 alt="D'Tourkeun by Dzawani Tour"
                 width={200}
                 height={75}
-                className="h-10 w-auto"
+                className={`h-10 w-auto transition-all duration-300 ${
+                  isScrolled ? "brightness-100" : "brightness-0 invert"
+                }`}
                 priority
               />
             ) : (
@@ -128,15 +130,6 @@ export default function Navbar() {
           {/* CTA Buttons + Language Switcher */}
           <div className="hidden lg:flex items-center gap-3">
             <LanguageSwitcher isScrolled={isScrolled} />
-            <a
-              href="tel:+6281234567890"
-              className={`flex items-center gap-2 text-sm font-medium transition-colors font-inter ${
-                isScrolled ? "text-gray-600 hover:text-magenta" : "text-white/90 hover:text-white"
-              }`}
-            >
-              <Phone className="w-4 h-4" />
-              <span>+62 812-3456-7890</span>
-            </a>
             <Link href="/kontak" className="btn-primary text-sm py-2.5 px-5">
               {t.nav.orderNow}
             </Link>

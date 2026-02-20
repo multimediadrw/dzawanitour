@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Clock, MapPin, Heart, ArrowRight } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight } from "lucide-react";
 import { TourPackage } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -40,10 +40,6 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
               {tour.badge}
             </span>
           )}
-
-          <button className="absolute top-4 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-magenta transition-colors">
-            <Heart className="w-4 h-4 text-white" />
-          </button>
 
           <div className="absolute bottom-4 left-4 right-4">
             <div className="flex items-center gap-1 mb-1">

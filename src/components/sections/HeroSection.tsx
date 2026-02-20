@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, MapPin, Calendar, Users, ChevronRight, Star } from "lucide-react";
+import { ChevronRight, Star } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const heroSlides = [
@@ -25,11 +25,7 @@ const heroSlides = [
 
 export default function HeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [searchData, setSearchData] = useState({
-    destination: "",
-    date: "",
-    guests: "2",
-  });
+
   const { t, language } = useLanguage();
 
   return (
@@ -98,78 +94,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Search Box */}
-        <div className="mt-12 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-          <h3 className="text-white font-semibold font-poppins mb-4 text-lg">
-            {language === "en" ? "Find Your Dream Tour Package" : "Cari Paket Tour Impian Anda"}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Destination */}
-            <div className="relative">
-              <label className="block text-white/70 text-xs font-inter mb-1.5">
-                {language === "en" ? "Destination" : "Destinasi"}
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
-                <input
-                  type="text"
-                  placeholder={language === "en" ? "Where to?" : "Mau ke mana?"}
-                  value={searchData.destination}
-                  onChange={(e) => setSearchData({ ...searchData, destination: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-white/40 text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all"
-                />
-              </div>
-            </div>
 
-            {/* Date */}
-            <div>
-              <label className="block text-white/70 text-xs font-inter mb-1.5">
-                {language === "en" ? "Departure Date" : "Tanggal Berangkat"}
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
-                <input
-                  type="date"
-                  value={searchData.date}
-                  onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-white/40 text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Guests */}
-            <div>
-              <label className="block text-white/70 text-xs font-inter mb-1.5">
-                {language === "en" ? "Number of People" : "Jumlah Orang"}
-              </label>
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
-                <select
-                  value={searchData.guests}
-                  onChange={(e) => setSearchData({ ...searchData, guests: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white text-sm font-inter focus:outline-none focus:border-ocean focus:bg-white/20 transition-all appearance-none"
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                    <option key={n} value={n} className="text-gray-800">
-                      {n} {language === "en" ? "Person" : "Orang"}
-                    </option>
-                  ))}
-                  <option value="10+" className="text-gray-800">
-                    10+ {language === "en" ? "People (Group)" : "Orang (Grup)"}
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            {/* Search Button */}
-            <div className="flex items-end">
-              <button className="w-full btn-primary py-3 flex items-center justify-center gap-2">
-                <Search className="w-5 h-5" />
-                {language === "en" ? "Search Now" : "Cari Sekarang"}
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Slide Indicators */}
