@@ -159,15 +159,25 @@ function OpenTripContent() {
                     <span className="text-gray-500 font-inter text-xs">{item.includes}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <a
-                      href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin booking Open Trip ${item.destinasi} tanggal ${item.tanggalBerangkat}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      {language === "en" ? "Book" : "Pesan"}
-                    </a>
+                    <div className="flex items-center gap-2">
+                      {(item as any).hasDetail && (item as any).slug ? (
+                        <Link
+                          href={`/open-trip/${(item as any).slug}`}
+                          className="inline-flex items-center gap-1.5 bg-ocean hover:bg-ocean/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
+                        >
+                          {language === "en" ? "View Details" : "Lihat Detail"}
+                        </Link>
+                      ) : null}
+                      <a
+                        href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin booking Open Trip ${item.destinasi} tanggal ${item.tanggalBerangkat}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        {language === "en" ? "Book" : "Pesan"}
+                      </a>
+                    </div>
                   </td>
                 </tr>
               ))}
