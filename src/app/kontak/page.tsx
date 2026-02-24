@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, Send } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function KontakPage() {
@@ -33,25 +33,16 @@ export default function KontakPage() {
     {
       icon: Phone,
       title: language === "en" ? "Phone" : "Telepon",
-      content: "+62 812-3456-7890",
+      content: "08112222254",
       color: "text-ocean",
       bg: "bg-ocean-50",
     },
     {
       icon: Mail,
       title: "Email",
-      content: "info@dzawanitour.com",
+      content: "dzawani.marketing@gmail.com",
       color: "text-purple",
       bg: "bg-purple-50",
-    },
-    {
-      icon: Clock,
-      title: language === "en" ? "Operating Hours" : "Jam Operasional",
-      content: language === "en"
-        ? "Monday - Saturday: 08:00 - 20:00 WIB\nSunday: 09:00 - 17:00 WIB"
-        : "Senin - Sabtu: 08.00 - 20.00 WIB\nMinggu: 09.00 - 17.00 WIB",
-      color: "text-sunset",
-      bg: "bg-orange-50",
     },
   ];
 
@@ -106,7 +97,7 @@ export default function KontakPage() {
 
             {/* WhatsApp CTA */}
             <a
-              href="https://wa.me/6281234567890"
+              href="https://wa.me/628112222254"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-lg font-poppins"

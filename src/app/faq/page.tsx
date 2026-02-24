@@ -307,7 +307,7 @@ export default function FAQPage() {
                   : "Tim kami siap membantu Anda melalui WhatsApp setiap hari."}
               </p>
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/628112222254"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl transition-all font-poppins text-sm"
@@ -375,12 +375,12 @@ export default function FAQPage() {
                 {language === "en"
                   ? "For further questions regarding terms and conditions, please contact us at "
                   : "Untuk pertanyaan lebih lanjut mengenai syarat dan ketentuan, silakan hubungi kami di "}
-                <a href="mailto:info@dzawanitour.com" className="text-magenta font-semibold hover:underline">
-                  info@dzawanitour.com
+                <a href="mailto:dzawani.marketing@gmail.com" className="text-magenta font-semibold hover:underline">
+                  dzawani.marketing@gmail.com
                 </a>
                 {language === "en" ? " or WhatsApp " : " atau WhatsApp "}
-                <a href="https://wa.me/6281234567890" className="text-magenta font-semibold hover:underline">
-                  +62 812-3456-7890
+                <a href="https://wa.me/628112222254" className="text-magenta font-semibold hover:underline">
+                  08112222254
                 </a>
               </p>
             </div>

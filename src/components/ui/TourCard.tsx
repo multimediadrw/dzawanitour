@@ -84,7 +84,7 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
               <p className="text-gray-400 text-xs font-inter">/orang</p>
             </div>
             <a
-              href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya tertarik dengan paket ${tour.title}`}
+              href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya tertarik dengan paket ${tour.title}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary text-sm py-2.5 px-5 inline-flex items-center gap-1.5"

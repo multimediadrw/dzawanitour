@@ -41,7 +41,7 @@ export default function CTASection() {
             <ArrowRight className="w-5 h-5" />
           </Link>
           <a
-            href="https://wa.me/6281234567890?text=Halo%20Dzawani%20Tour%2C%20saya%20ingin%20konsultasi%20paket%20tour"
+            href="https://wa.me/628112222254?text=Halo%20Dzawani%20Tour%2C%20saya%20ingin%20konsultasi%20paket%20tour"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 font-poppins inline-flex items-center gap-2"
@@ -50,7 +50,7 @@ export default function CTASection() {
             {language === "en" ? "Chat WhatsApp" : "Chat WhatsApp"}
           </a>
           <a
-            href="tel:+6281234567890"
+            href="tel:+628112222254"
             className="btn-outline-white py-4 px-8 inline-flex items-center gap-2"
           >
             <Phone className="w-5 h-5" />

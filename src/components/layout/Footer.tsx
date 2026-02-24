@@ -72,7 +72,7 @@ export default function Footer() {
                 <Youtube className="w-5 h-5" />
               </a>
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/628112222254"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-500 flex items-center justify-center transition-colors"
@@ -130,19 +130,19 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-magenta flex-shrink-0" />
                 <a
-                  href="tel:+6281234567890"
+                  href="tel:+628112222254"
                   className="text-white/70 hover:text-white text-sm transition-colors font-inter"
                 >
-                  +62 812-3456-7890
+                  08112222254
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-magenta flex-shrink-0" />
                 <a
-                  href="mailto:info@dzawanitour.com"
+                  href="mailto:dzawani.marketing@gmail.com"
                   className="text-white/70 hover:text-white text-sm transition-colors font-inter"
                 >
-                  info@dzawanitour.com
+                  dzawani.marketing@gmail.com
                 </a>
               </li>
             </ul>

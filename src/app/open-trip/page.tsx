@@ -169,7 +169,7 @@ function OpenTripContent() {
                         </Link>
                       ) : null}
                       <a
-                        href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin booking Open Trip ${item.destinasi} tanggal ${item.tanggalBerangkat}`}
+                        href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin booking Open Trip ${item.destinasi} tanggal ${item.tanggalBerangkat}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
@@ -198,7 +198,7 @@ function OpenTripContent() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="https://wa.me/6281234567890"
+            href="https://wa.me/628112222254"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"

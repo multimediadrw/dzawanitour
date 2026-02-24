@@ -170,7 +170,7 @@ function PrivateTripContent() {
                   </td>
                   <td className="px-6 py-4">
                     <a
-                      href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip ke ${item.destinasi}`}
+                      href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip ke ${item.destinasi}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
@@ -207,7 +207,7 @@ function PrivateTripContent() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip"
+            href="https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"

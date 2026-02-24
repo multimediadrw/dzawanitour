@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight, Star } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -27,6 +27,15 @@ export default function HeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const { t, language } = useLanguage();
+
+  // Auto-scroll carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">

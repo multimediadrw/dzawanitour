@@ -376,7 +376,7 @@ export default function OpenTripDetailPage() {
               </div>
 
               <a
-                href={`https://wa.me/6281234567890?text=Halo Dzawani Tour, saya ingin booking paket ${trip.title}. Mohon info lebih lanjut.`}
+                href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin booking paket ${trip.title}. Mohon info lebih lanjut.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full flex items-center justify-center gap-2 mb-3"
