@@ -30,10 +30,8 @@ export default function EditDestinationPage() {
 
   const fetchDestination = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/destinations/${params.id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -41,7 +39,7 @@ export default function EditDestinationPage() {
         const data = await response.json();
         setFormData(data);
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error fetching destination:", error);
@@ -55,12 +53,10 @@ export default function EditDestinationPage() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/destinations/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

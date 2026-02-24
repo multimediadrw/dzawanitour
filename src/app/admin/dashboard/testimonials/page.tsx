@@ -26,16 +26,14 @@ export default function TestimonialsPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("/api/admin/testimonials", {
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
         const data = await response.json();
         setTestimonials(data);
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error:", error);
@@ -48,10 +46,8 @@ export default function TestimonialsPage() {
     if (!confirm("Hapus testimoni ini?")) return;
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/testimonials/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) fetchTestimonials();

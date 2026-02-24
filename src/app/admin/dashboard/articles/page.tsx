@@ -15,15 +15,13 @@ export default function ArtikelPage() {
 
   const fetchItems = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("/api/admin/articles", {
-        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) {
         const data = await response.json();
         setItems(data);
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error:", error);
@@ -35,10 +33,8 @@ export default function ArtikelPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Hapus item ini?")) return;
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/articles/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) fetchItems();
     } catch (error) {

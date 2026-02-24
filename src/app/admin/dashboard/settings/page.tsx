@@ -22,9 +22,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("/api/admin/settings", {
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
@@ -35,7 +33,7 @@ export default function SettingsPage() {
         });
         setSettings((prev) => ({ ...prev, ...settingsObj }));
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error:", error);
@@ -49,14 +47,12 @@ export default function SettingsPage() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem("token");
       
       for (const [key, value] of Object.entries(settings)) {
         await fetch("/api/admin/settings", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ key, value }),
         });

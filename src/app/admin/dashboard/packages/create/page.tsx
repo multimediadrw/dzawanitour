@@ -44,7 +44,6 @@ export default function CreatePackagePage() {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('admin_token');
       
       // Clean up empty array items
       const cleanedData = {
@@ -63,7 +62,6 @@ export default function CreatePackagePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(cleanedData),
       });

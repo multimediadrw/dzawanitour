@@ -26,16 +26,14 @@ export default function EditTestimonialPage() {
 
   const fetchTestimonial = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/testimonials/${params.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
         const data = await response.json();
         setFormData(data);
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error:", error);
@@ -49,12 +47,10 @@ export default function EditTestimonialPage() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/testimonials/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

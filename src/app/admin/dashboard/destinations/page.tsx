@@ -29,10 +29,8 @@ export default function DestinationsPage() {
 
   const fetchDestinations = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch("/api/admin/destinations", {
         headers: {
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -40,7 +38,7 @@ export default function DestinationsPage() {
         const data = await response.json();
         setDestinations(data);
       } else {
-        router.push("/admin/login");
+        
       }
     } catch (error) {
       console.error("Error fetching destinations:", error);
@@ -53,11 +51,9 @@ export default function DestinationsPage() {
     if (!confirm("Apakah Anda yakin ingin menghapus destinasi ini?")) return;
 
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(`/api/admin/destinations/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
         },
       });
 

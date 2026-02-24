@@ -31,7 +31,6 @@ export default function PackagesPage() {
 
   const fetchPackages = async () => {
     try {
-      const token = localStorage.getItem('admin_token');
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '10',
@@ -42,7 +41,6 @@ export default function PackagesPage() {
 
       const res = await fetch(`/api/admin/packages?${params}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -62,11 +60,9 @@ export default function PackagesPage() {
     if (!confirm('Apakah Anda yakin ingin menghapus paket ini?')) return;
 
     try {
-      const token = localStorage.getItem('admin_token');
       const res = await fetch(`/api/admin/packages/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`,
         },
       });
 
