@@ -27,7 +27,7 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Paket Tour', href: '/admin/dashboard/packages', icon: Package },
-  { name: 'Destinasi', href: '/admin/dashboard/destinations', icon: MapPin },
+
   { name: 'Testimoni', href: '/admin/dashboard/testimonials', icon: MessageSquare },
   { name: 'FAQ', href: '/admin/dashboard/faqs', icon: HelpCircle },
   { name: 'Hero Slides', href: '/admin/dashboard/hero-slides', icon: Image },
