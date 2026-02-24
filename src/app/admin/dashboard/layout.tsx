@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -44,38 +44,12 @@ export default function AdminDashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    // Check authentication
-    const token = localStorage.getItem('admin_token');
-    if (!token) {
-      router.push('/admin/login');
-      return;
-    }
-
-    // Decode token to get user info
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUser(payload);
-    } catch (error) {
-      localStorage.removeItem('admin_token');
-      router.push('/admin/login');
-    }
-  }, [router]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('admin_token');
+  const handleLogout = async () => {
+    // Call logout API to clear cookie
+    await fetch('/api/admin/auth/logout', { method: 'POST' });
     router.push('/admin/login');
   };
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ocean-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,11 +85,11 @@ export default function AdminDashboardLayout({
         <div className="p-6 border-b border-ocean-500">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-ocean-400 rounded-full flex items-center justify-center">
-              <span className="text-lg font-bold">{user.name?.[0] || 'A'}</span>
+              <span className="text-lg font-bold">A</span>
             </div>
             <div>
-              <p className="font-medium">{user.name}</p>
-              <p className="text-sm text-ocean-200">{user.role}</p>
+              <p className="font-medium">admin</p>
+              <p className="text-sm text-ocean-200">admin</p>
             </div>
           </div>
         </div>
@@ -133,6 +107,7 @@ export default function AdminDashboardLayout({
                     ? 'bg-ocean-700 text-white'
                     : 'text-ocean-100 hover:bg-ocean-700/50'
                 }`}
+                onClick={() => setSidebarOpen(false)}
               >
                 <item.icon className="w-5 h-5" />
                 <span>{item.name}</span>
