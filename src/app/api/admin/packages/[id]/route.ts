@@ -5,12 +5,13 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'dzawanitour-secret-key-2026';
 
 function verifyToken(request: NextRequest) {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '');
-  
+  let token = request.headers.get('authorization')?.replace('Bearer ', '');
+  if (!token) {
+    token = request.cookies.get('token')?.value;
+  }
   if (!token) {
     throw new Error('Unauthorized');
   }
-
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
