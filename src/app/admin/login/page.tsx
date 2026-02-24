@@ -29,11 +29,15 @@ export default function AdminLoginPage() {
       if (res.ok) {
         // Store token in localStorage
         localStorage.setItem('admin_token', data.token);
-        router.push('/admin/dashboard');
+        console.log('Login berhasil, redirect ke dashboard...');
+        // Use window.location for more reliable redirect
+        window.location.href = '/admin/dashboard';
       } else {
         setError(data.message || 'Login gagal');
+        console.error('Login gagal:', data.message);
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Terjadi kesalahan. Silakan coba lagi.');
     } finally {
       setLoading(false);
