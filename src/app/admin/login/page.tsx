@@ -27,8 +27,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // Store token in localStorage
-        localStorage.setItem('admin_token', data.token);
+        // Token is now stored in HTTP-only cookie by the API
         console.log('Login berhasil, redirect ke dashboard...');
         // Use window.location for more reliable redirect
         window.location.href = '/admin/dashboard';

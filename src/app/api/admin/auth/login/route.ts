@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
       { expiresIn: '7d' }
     );
 
-    return NextResponse.json({
+    // Create response with cookie
+    const response = NextResponse.json({
       message: 'Login berhasil',
       token,
       user: {
@@ -67,6 +68,17 @@ export async function POST(request: NextRequest) {
         role: user.role,
       },
     });
+
+    // Set HTTP-only cookie for auth
+    response.cookies.set('admin_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    });
+
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
