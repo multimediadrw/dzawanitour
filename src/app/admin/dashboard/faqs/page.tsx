@@ -61,14 +61,20 @@ export default function FAQPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Pertanyaan</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Jawaban</th>
               <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase">Aksi</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {items.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">{item.id}</td>
+                <td className="px-6 py-4 text-sm text-gray-900 font-medium">{item.question}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{item.category}</span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600 max-w-md truncate">{item.answer}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Link href={`/admin/dashboard/faqs/edit/${item.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
                     <Edit size={18} className="inline" />
