@@ -7,7 +7,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    let token = request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -38,7 +39,8 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    let token = request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -75,7 +77,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    let token = request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

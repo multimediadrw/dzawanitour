@@ -4,7 +4,8 @@ import { verifyToken } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    let token = request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const settings = await prisma.setting.findMany();
     return NextResponse.json(settings);
@@ -15,7 +16,8 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    let token = request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const body = await request.json();
     
