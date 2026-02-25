@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Image } from "lucide-react";
 
-interface HeroSlide { id: string; title: string; image: string; order: number; active: boolean; }
+interface HeroSlide { id: string; title: string; subtitle?: string; image: string; order: number; status: string; }
 
 export default function HeroSlidesPage() {
   const [items, setItems] = useState<HeroSlide[]>([]);
@@ -61,14 +61,28 @@ export default function HeroSlidesPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Preview</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Subtitle</th>
+              <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">Order</th>
+              <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
               <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase">Aksi</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {items.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">{item.id}</td>
+                <td className="px-6 py-4">
+                  <img src={item.image} alt={item.title} className="w-24 h-16 object-cover rounded" />
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900 font-medium">{item.title}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{item.subtitle || '-'}</td>
+                <td className="px-6 py-4 text-center text-sm text-gray-900">{item.order}</td>
+                <td className="px-6 py-4 text-center">
+                  <span className={`px-2 py-1 rounded-full text-xs ${item.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                    {item.status}
+                  </span>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Link href={`/admin/dashboard/hero-slides/edit/${item.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
                     <Edit size={18} className="inline" />
