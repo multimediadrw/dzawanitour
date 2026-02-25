@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dzawanitour-secret-key-2026';
 function verifyToken(request: NextRequest) {
   let token = request.headers.get('authorization')?.replace('Bearer ', '');
   if (!token) {
-    token = request.cookies.get('token')?.value;
+    token = request.cookies.get('admin_token')?.value;
   }
   if (!token) {
     throw new Error('Unauthorized');
