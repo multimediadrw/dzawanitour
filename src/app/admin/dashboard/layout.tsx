@@ -16,6 +16,7 @@ import {
   X,
   FileText,
   Star,
+  Calendar,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -27,6 +28,7 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Paket Tour', href: '/admin/dashboard/packages', icon: Package },
+  { name: 'Jadwal Trip', href: '/admin/dashboard/schedules', icon: Calendar },
   { name: 'Testimoni', href: '/admin/dashboard/testimonials', icon: MessageSquare },
   { name: 'FAQ', href: '/admin/dashboard/faqs', icon: HelpCircle },
   { name: 'Hero Slides', href: '/admin/dashboard/hero-slides', icon: Image },

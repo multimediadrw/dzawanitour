@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getOpenTripBySlug } from "@/lib/open-trip-detail-data";
+import TripScheduleCalendar from "@/components/trip/TripScheduleCalendar";
 import {
   MapPin,
   Calendar,
@@ -345,52 +346,59 @@ export default function OpenTripDetailPage() {
 
           {/* Right Column - Booking Card */}
           <div className="lg:col-span-1">
-            <div className="card sticky top-24">
-              <h3 className="font-bold text-gray-800 font-poppins mb-4">Booking Paket Ini</h3>
-
-              <div className="bg-gradient-to-br from-ocean to-purple rounded-xl p-6 mb-4 text-white">
-                <p className="text-white/80 text-xs font-inter mb-1">Harga Mulai Dari</p>
-                <p className="text-3xl font-bold font-poppins">
-                  {formatRupiah(trip.price.low_season.full)}
-                </p>
-                <p className="text-white/80 text-sm font-inter mt-1">per orang</p>
+            <div className="space-y-4 sticky top-24">
+              {/* Price Card */}
+              <div className="card">
+                <div className="bg-gradient-to-br from-ocean to-purple rounded-xl p-5 mb-4 text-white">
+                  <p className="text-white/80 text-xs font-inter mb-1">Harga Mulai Dari</p>
+                  <p className="text-3xl font-bold font-poppins">
+                    {formatRupiah(trip.price.low_season.full)}
+                  </p>
+                  <p className="text-white/80 text-sm font-inter mt-1">per orang</p>
+                </div>
+                <div className="space-y-2.5 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600 font-inter">Durasi</span>
+                    <span className="font-semibold text-gray-800 font-poppins">{trip.duration}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600 font-inter">Minimal Peserta</span>
+                    <span className="font-semibold text-gray-800 font-poppins">
+                      {trip.booking.min_participants} orang
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600 font-inter">Kategori</span>
+                    <span className="font-semibold text-gray-800 font-poppins">
+                      {trip.category === "international" ? "Internasional" : "Domestik"}
+                    </span>
+                  </div>
+                </div>
+                <a
+                  href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin tanya paket ${trip.title}. Mohon info lebih lanjut.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary w-full flex items-center justify-center gap-2 mb-2"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Konsultasi via WhatsApp
+                </a>
+                <Link
+                  href="/open-trip"
+                  className="text-center block text-sm text-gray-500 hover:text-magenta font-inter transition-colors"
+                >
+                  Lihat Paket Lainnya
+                </Link>
               </div>
 
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 font-inter">Durasi</span>
-                  <span className="font-semibold text-gray-800 font-poppins">{trip.duration}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 font-inter">Minimal Peserta</span>
-                  <span className="font-semibold text-gray-800 font-poppins">
-                    {trip.booking.min_participants} orang
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 font-inter">Kategori</span>
-                  <span className="font-semibold text-gray-800 font-poppins">
-                    {trip.category === "international" ? "Internasional" : "Domestik"}
-                  </span>
-                </div>
-              </div>
-
-              <a
-                href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin booking paket ${trip.title}. Mohon info lebih lanjut.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary w-full flex items-center justify-center gap-2 mb-3"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Konsultasi via WhatsApp
-              </a>
-
-              <Link
-                href="/open-trip?kategori=internasional"
-                className="btn-secondary w-full text-center block"
-              >
-                Lihat Paket Lainnya
-              </Link>
+              {/* Schedule Calendar */}
+              <TripScheduleCalendar
+                packageSlug={trip.slug}
+                packageTitle={trip.title}
+                basePrice={trip.price.low_season.full}
+                whatsappNumber="628112222254"
+                language="id"
+              />
             </div>
           </div>
         </div>

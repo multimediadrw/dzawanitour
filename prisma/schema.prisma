@@ -23,6 +23,7 @@ model User {
 
 // Tour Packages
 model TourPackage {
+  schedules         TripSchedule[]
   id                String   @id @default(uuid())
   slug              String   @unique
   title             String
@@ -60,6 +61,26 @@ model TourPackage {
   
   @@index([type, category, status])
   @@index([slug])
+}
+
+// Trip Schedules (Jadwal Keberangkatan)
+model TripSchedule {
+  id              String   @id @default(uuid())
+  packageId       String
+  package         TourPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  departureDate   DateTime
+  returnDate      DateTime?
+  price           Int?     // Override harga jika berbeda dari paket
+  quota           Int      @default(20)  // Total kuota
+  bookedCount     Int      @default(0)   // Sudah terpesan
+  status          String   @default("available") // available, almost_full, full, cancelled
+  notes           String?  @db.Text
+  notesEn         String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([packageId, departureDate])
+  @@index([status])
 }
 
 // Destinations
