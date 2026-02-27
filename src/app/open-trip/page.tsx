@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import { openTripDomestik, openTripInternasional } from "@/lib/data";
 import { MessageCircle, Users, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import TripDatePickerSection from "@/components/trip/TripDatePickerSection";
 
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -75,7 +76,14 @@ function OpenTripContent() {
         </button>
       </div>
 
-      {/* Table */}
+      {/* Date Picker Section - shows schedules from DB */}
+      <TripDatePickerSection
+        category={activeTab}
+        language={language}
+        whatsappNumber="628112222254"
+      />
+
+      {/* Table - fallback static data */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-bold text-gray-800 font-poppins">
