@@ -6,7 +6,17 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { privateTripDomestik, privateTripInternasional } from "@/lib/data";
-import { MessageCircle, Shield, Clock, CheckCircle } from "lucide-react";
+import {
+  MessageCircle,
+  Shield,
+  Clock,
+  CheckCircle,
+  Users,
+  MapPin,
+  Star,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 function formatRupiah(amount: number) {
@@ -17,6 +27,149 @@ function formatRupiah(amount: number) {
   }).format(amount);
 }
 
+type PrivateTripItem = {
+  id: string;
+  destinasi: string;
+  durasi: string;
+  minPax: string;
+  hargaPer2Pax: number;
+  hargaPer4Pax: number;
+  hargaPer6Pax: number;
+  status: string;
+  includes: string;
+};
+
+function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const includes = item.includes.split(",").map((s) => s.trim());
+
+  const paxOptions = [
+    { label: "2 Pax", price: item.hargaPer2Pax },
+    { label: "4 Pax", price: item.hargaPer4Pax },
+    { label: "6 Pax", price: item.hargaPer6Pax },
+  ];
+
+  return (
+    <div className="border border-gray-100 rounded-2xl bg-white hover:border-magenta/30 hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      {/* Main Row */}
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
+          {/* Left */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-4 h-4 text-magenta flex-shrink-0" />
+              <h4 className="font-bold text-gray-800 font-poppins text-base group-hover:text-magenta transition-colors">
+                {item.destinasi}
+              </h4>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 mb-3 ml-6">
+              <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
+                <Clock className="w-3.5 h-3.5 text-ocean" />
+                {item.durasi}
+              </span>
+              <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
+                <Users className="w-3.5 h-3.5 text-ocean" />
+                {language === "en" ? `Min. ${item.minPax}` : `Min. ${item.minPax}`}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                <CheckCircle className="w-3.5 h-3.5" />
+                {language === "en" ? "Available" : "Tersedia"}
+              </span>
+            </div>
+
+            {/* Includes */}
+            <div className="flex flex-wrap gap-1.5 ml-6">
+              {includes.map((inc, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 text-xs bg-gray-50 text-gray-600 px-2.5 py-1 rounded-full font-inter border border-gray-100"
+                >
+                  <CheckCircle className="w-3 h-3 text-green-500" />
+                  {inc}
+                </span>
+              ))}
+            </div>
+
+            {/* Toggle detail */}
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="mt-3 ml-6 inline-flex items-center gap-1 text-sm text-ocean font-semibold font-inter hover:underline"
+            >
+              {expanded
+                ? (language === "en" ? "Hide prices" : "Sembunyikan harga")
+                : (language === "en" ? "See all prices" : "Lihat semua harga")}
+              {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+          </div>
+
+          {/* Right: Starting price + CTA */}
+          <div className="flex flex-col items-end gap-3 flex-shrink-0">
+            <div className="text-right">
+              <p className="text-xs text-gray-400 font-inter mb-0.5">
+                {language === "en" ? "Starting from" : "Mulai dari"}
+              </p>
+              <p className="text-2xl font-bold text-magenta font-poppins">
+                {formatRupiah(item.hargaPer2Pax)}
+              </p>
+              <p className="text-xs text-gray-400 font-inter">/2 pax</p>
+            </div>
+
+            <a
+              href={`https://wa.me/628112222254?text=${encodeURIComponent(
+                `Halo Dzawani Tour, saya tertarik dengan paket Private Trip *${item.destinasi}*.\n\nMohon info lebih lanjut mengenai jadwal dan ketersediaan.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold font-poppins text-sm bg-magenta text-white hover:bg-magenta/90 shadow-md shadow-magenta/20 active:scale-95 transition-all whitespace-nowrap"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {language === "en" ? "Book Now" : "Pesan Sekarang"}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Expanded: Price per pax options */}
+      {expanded && (
+        <div className="border-t border-gray-100 bg-gray-50/50 px-5 py-4">
+          <p className="text-xs font-semibold text-gray-500 font-inter uppercase tracking-wider mb-3">
+            {language === "en" ? "Price per pax options" : "Pilihan harga per pax"}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {paxOptions.map((opt) => (
+              <div
+                key={opt.label}
+                className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col gap-2"
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-ocean" />
+                  <span className="font-semibold text-gray-700 font-poppins text-sm">{opt.label}</span>
+                </div>
+                <p className="text-xl font-bold text-magenta font-poppins">
+                  {formatRupiah(opt.price)}
+                </p>
+                <p className="text-xs text-gray-400 font-inter">/pax</p>
+                <a
+                  href={`https://wa.me/628112222254?text=${encodeURIComponent(
+                    `Halo Dzawani Tour, saya ingin booking Private Trip *${item.destinasi}* untuk ${opt.label}.\n\nHarga: ${formatRupiah(opt.price)}/pax\n\nMohon info lebih lanjut.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-magenta/10 text-magenta font-semibold font-poppins text-xs hover:bg-magenta/20 transition-all"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  {language === "en" ? "Choose" : "Pilih"}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PrivateTripContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"domestik" | "internasional">("domestik");
@@ -24,14 +177,11 @@ function PrivateTripContent() {
 
   useEffect(() => {
     const kategori = searchParams.get("kategori");
-    if (kategori === "internasional") {
-      setActiveTab("internasional");
-    } else {
-      setActiveTab("domestik");
-    }
+    if (kategori === "internasional") setActiveTab("internasional");
+    else setActiveTab("domestik");
   }, [searchParams]);
 
-  const data = activeTab === "domestik" ? privateTripDomestik : privateTripInternasional;
+  const data: PrivateTripItem[] = activeTab === "domestik" ? privateTripDomestik : privateTripInternasional;
 
   const features = [
     {
@@ -53,10 +203,10 @@ function PrivateTripContent() {
       bg: "bg-sky-50",
     },
     {
-      icon: CheckCircle,
-      title: language === "en" ? "Custom Itinerary" : "Itinerary Custom",
+      icon: Star,
+      title: language === "en" ? "Custom Itinerary" : "Itinerary Kustom",
       desc: language === "en"
-        ? "Routes and activities can be tailored to your group's preferences."
+        ? "Routes and activities can be tailored to your group preferences."
         : "Rute dan aktivitas dapat disesuaikan dengan preferensi rombongan.",
       color: "text-purple",
       bg: "bg-purple-50",
@@ -65,23 +215,19 @@ function PrivateTripContent() {
 
   return (
     <div className="container mx-auto px-4 max-w-7xl py-12">
-
-      {/* Keunggulan Private Trip */}
+      {/* Feature highlights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {features.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div key={item.title} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4">
-              <div className={`w-10 h-10 ${item.bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                <Icon className={`w-5 h-5 ${item.color}`} />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 font-poppins text-sm">{item.title}</p>
-                <p className="text-gray-500 font-inter text-xs mt-0.5">{item.desc}</p>
-              </div>
+        {features.map((f, i) => (
+          <div key={i} className={`${f.bg} rounded-2xl p-5 flex items-start gap-3`}>
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
+              <f.icon className={`w-5 h-5 ${f.color}`} />
             </div>
-          );
-        })}
+            <div>
+              <p className={`font-bold font-poppins text-sm ${f.color}`}>{f.title}</p>
+              <p className="text-gray-600 font-inter text-xs mt-0.5 leading-relaxed">{f.desc}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Tab Toggle */}
@@ -108,84 +254,35 @@ function PrivateTripContent() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      {/* Main Card */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8">
+        {/* Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="font-bold text-gray-800 font-poppins">
-            Private Trip — {activeTab === "domestik"
-              ? (language === "en" ? "Domestic Tour" : "Wisata Domestik")
-              : (language === "en" ? "International Tour" : "Wisata Internasional")}
-          </h2>
-          <span className="text-sm text-gray-500 font-inter">
-            {language === "en" ? "Price starting per person" : "Harga mulai per orang"}
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-magenta" />
+            <h2 className="font-bold text-gray-800 font-poppins">
+              Private Trip —{" "}
+              {activeTab === "domestik"
+                ? (language === "en" ? "Domestic Tour" : "Wisata Domestik")
+                : (language === "en" ? "International Tour" : "Wisata Internasional")}
+            </h2>
+            <span className="bg-magenta/10 text-magenta text-xs font-bold px-2 py-0.5 rounded-full font-poppins">
+              {data.length} {language === "en" ? "packages" : "paket"}
+            </span>
+          </div>
+          <span className="text-sm text-gray-400 font-inter hidden sm:block">
+            {language === "en" ? "Flexible departure date" : "Tanggal keberangkatan fleksibel"}
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
-                  {language === "en" ? "Destination" : "Destinasi"}
-                </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
-                  {language === "en" ? "Min. Pax" : "Min. Pax"}
-                </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
-                  <span className="text-magenta">{language === "en" ? "Price 2 Pax" : "Harga 2 Pax"}</span>
-                </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
-                  <span className="text-ocean">{language === "en" ? "Price 4 Pax" : "Harga 4 Pax"}</span>
-                </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">
-                  <span className="text-purple">{language === "en" ? "Price 6 Pax" : "Harga 6 Pax"}</span>
-                </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-inter">Includes</th>
-                <th className="px-6 py-4"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {data.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-gray-800 font-poppins text-sm">{item.destinasi}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gray-600 font-inter text-sm">{item.minPax}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-bold text-magenta font-poppins text-sm">{formatRupiah(item.hargaPer2Pax)}</span>
-                    <span className="text-gray-400 font-inter text-xs block">/{language === "en" ? "person" : "orang"}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-bold text-ocean font-poppins text-sm">{formatRupiah(item.hargaPer4Pax)}</span>
-                    <span className="text-gray-400 font-inter text-xs block">/{language === "en" ? "person" : "orang"}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-bold text-purple font-poppins text-sm">{formatRupiah(item.hargaPer6Pax)}</span>
-                    <span className="text-gray-400 font-inter text-xs block">/{language === "en" ? "person" : "orang"}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gray-500 font-inter text-xs">{item.includes}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <a
-                      href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip ke ${item.destinasi}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 bg-magenta hover:bg-magenta/90 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-300 font-poppins whitespace-nowrap"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      {language === "en" ? "Consult" : "Konsultasi"}
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Cards */}
+        <div className="p-6 space-y-4">
+          {data.map((item) => (
+            <PrivateTripCard key={item.id} item={item} language={language} />
+          ))}
         </div>
 
-        {/* Table Note */}
+        {/* Note */}
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
           <p className="text-xs text-gray-500 font-inter">
             {language === "en"
@@ -198,22 +295,22 @@ function PrivateTripContent() {
       {/* CTA */}
       <div className="mt-10 bg-dzawani-gradient rounded-2xl p-8 text-center text-white">
         <h3 className="text-2xl font-bold font-poppins mb-2">
-          {language === "en" ? "Ready to plan your dream trip?" : "Siap merencanakan perjalanan impian Anda?"}
+          {language === "en" ? "Ready for an Exclusive Trip?" : "Siap untuk Perjalanan Eksklusif?"}
         </h3>
         <p className="text-white/80 font-inter mb-5">
           {language === "en"
-            ? "Consult your travel needs with our team. We will design the best itinerary according to your budget and wishes."
-            : "Konsultasikan kebutuhan perjalanan Anda dengan tim kami. Kami akan merancang itinerary terbaik sesuai budget dan keinginan Anda."}
+            ? "Contact us now and we will help design the perfect trip for you and your group."
+            : "Hubungi kami sekarang dan kami akan membantu merancang perjalanan sempurna untuk Anda dan rombongan."}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin konsultasi Private Trip"
+            href="https://wa.me/628112222254"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
-            {language === "en" ? "Free Consultation via WhatsApp" : "Konsultasi Gratis via WhatsApp"}
+            {language === "en" ? "Contact via WhatsApp" : "Hubungi via WhatsApp"}
           </a>
           <Link
             href="/open-trip"
@@ -229,30 +326,30 @@ function PrivateTripContent() {
 
 export default function PrivateTripPage() {
   const { language } = useLanguage();
-
   return (
     <main>
       <Navbar />
-
       {/* Hero */}
       <div className="bg-purple pt-36 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-dzawani-gradient opacity-80" />
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
+          <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-4">
+            <span>✦</span>
+            {language === "en" ? "Private Trip — Exclusive, Flexible, Memorable!" : "Private Trip — Eksklusif, Fleksibel, Berkesan!"}
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-3">
-            Private Trip
+            {language === "en" ? "Your Exclusive Journey" : "Perjalanan Eksklusif Anda"}
           </h1>
           <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
             {language === "en"
-              ? "Exclusive trip just for you and your group — flexible schedule, itinerary tailored to your wishes"
-              : "Perjalanan eksklusif khusus Anda dan rombongan — jadwal fleksibel, itinerary sesuai keinginan"}
+              ? "Travel with your own group, set your own schedule, and enjoy a personalized experience. We handle everything for you."
+              : "Berwisata bersama rombongan sendiri, tentukan jadwal sendiri, dan nikmati pengalaman yang dipersonalisasi. Kami urus semuanya untuk Anda."}
           </p>
         </div>
       </div>
-
       <Suspense fallback={<div className="py-20 text-center text-gray-400 font-inter">Loading...</div>}>
         <PrivateTripContent />
       </Suspense>
-
       <Footer />
     </main>
   );
