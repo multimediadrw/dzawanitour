@@ -389,7 +389,7 @@ export default function SchedulesPage() {
       ) : schedules.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
           <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 font-inter">Belum ada jadwal. Klik "Tambah Jadwal" untuk mulai.</p>
+          <p className="text-gray-500 font-inter">Belum ada jadwal. Klik &quot;Tambah Jadwal&quot; untuk mulai.</p>
         </div>
       ) : (
         <div className="space-y-4">
