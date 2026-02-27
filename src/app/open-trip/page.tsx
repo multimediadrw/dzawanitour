@@ -28,9 +28,12 @@ function formatRupiah(amount: number) {
   }).format(amount);
 }
 
-const DAY_NAMES = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-const MONTH_FULL = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const DAY_NAMES_ID = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+const DAY_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_NAMES_ID = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+const MONTH_NAMES_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTH_FULL_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const MONTH_FULL_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // Parse "15 Maret 2025" to Date
 function parseIndonesianDate(str: string): Date | null {
@@ -51,12 +54,13 @@ function toDateKey(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function formatDateLabel(d: Date) {
-  return `${d.getDate()} ${MONTH_FULL[d.getMonth()]} ${d.getFullYear()}`;
+function formatDateLabel(d: Date, lang: string) {
+  const monthFull = lang === "en" ? MONTH_FULL_EN : MONTH_FULL_ID;
+  return `${d.getDate()} ${monthFull[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-// Generate 90 days starting from earliest trip date or today
-function generateDays(startDate: Date, count = 90): Date[] {
+// Generate 120 days starting from earliest trip date or today
+function generateDays(startDate: Date, count = 120): Date[] {
   const days: Date[] = [];
   for (let i = 0; i < count; i++) {
     const d = new Date(startDate);
@@ -80,12 +84,12 @@ type TripItem = {
   hasDetail?: boolean;
 };
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, t }: { status: string; t: { available: string; almostFull: string; full: string } }) {
   if (status === "Tersedia") {
     return (
       <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
         <CheckCircle className="w-3.5 h-3.5" />
-        Tersedia
+        {t.available}
       </span>
     );
   }
@@ -93,19 +97,19 @@ function StatusBadge({ status }: { status: string }) {
     return (
       <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-600 border border-orange-200">
         <AlertCircle className="w-3.5 h-3.5" />
-        Hampir Penuh
+        {t.almostFull}
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-200">
       <XCircle className="w-3.5 h-3.5" />
-      Penuh
+      {t.full}
     </span>
   );
 }
 
-function TripCard({ item, language }: { item: TripItem; language: string }) {
+function TripCard({ item, t }: { item: TripItem; t: Record<string, string> }) {
   const includes = item.includes.split(",").map((s) => s.trim());
   const isFull = item.status === "Penuh";
 
@@ -137,7 +141,7 @@ function TripCard({ item, language }: { item: TripItem; language: string }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mb-3 ml-6">
-            <StatusBadge status={item.status} />
+            <StatusBadge status={item.status} t={t as { available: string; almostFull: string; full: string }} />
           </div>
 
           {/* Includes */}
@@ -159,7 +163,7 @@ function TripCard({ item, language }: { item: TripItem; language: string }) {
               href={`/open-trip/${item.slug}`}
               className="inline-block mt-3 ml-6 text-sm text-ocean font-semibold font-inter hover:underline"
             >
-              {language === "en" ? "View Details →" : "Lihat Detail →"}
+              {t.viewDetails}
             </Link>
           )}
         </div>
@@ -186,7 +190,7 @@ function TripCard({ item, language }: { item: TripItem; language: string }) {
             }`}
           >
             <MessageCircle className="w-4 h-4" />
-            {isFull ? (language === "en" ? "Full" : "Penuh") : (language === "en" ? "Book Now" : "Pilih Tiket")}
+            {isFull ? t.full : t.bookNow}
           </a>
         </div>
       </div>
@@ -202,7 +206,11 @@ function OpenTripContent() {
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
+
+  const DAY_NAMES = language === "en" ? DAY_NAMES_EN : DAY_NAMES_ID;
+  const MONTH_NAMES = language === "en" ? MONTH_NAMES_EN : MONTH_NAMES_ID;
+  const MONTH_FULL = language === "en" ? MONTH_FULL_EN : MONTH_FULL_ID;
 
   useEffect(() => {
     const kategori = searchParams.get("kategori");
@@ -240,6 +248,7 @@ function OpenTripContent() {
     } else {
       setSelectedDateKey(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const selectedTrips = selectedDateKey ? (tripsByDate[selectedDateKey] || []) : [];
@@ -259,20 +268,16 @@ function OpenTripContent() {
   for (let i = 0; i < firstDay; i++) calDays.push(null);
   for (let d = 1; d <= daysInMonth; d++) calDays.push(d);
 
+  const ot = t.openTrip;
+
   return (
     <div className="container mx-auto px-4 max-w-7xl py-12">
       {/* Info Banner */}
       <div className="bg-ocean-50 border border-ocean/20 rounded-2xl p-5 mb-8 flex items-start gap-3">
         <Users className="w-5 h-5 text-ocean flex-shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-gray-800 font-poppins text-sm">
-            {language === "en" ? "About Open Trip" : "Tentang Open Trip"}
-          </p>
-          <p className="text-gray-600 font-inter text-sm mt-0.5">
-            {language === "en"
-              ? "Open Trip is a group travel package with participants from various regions. Perfect for solo travelers or couples who want an affordable holiday with new friends. Limited quota per departure."
-              : "Open Trip adalah paket wisata bersama dengan peserta dari berbagai daerah. Cocok untuk solo traveler atau pasangan yang ingin liburan hemat dengan teman baru. Kuota terbatas per keberangkatan."}
-          </p>
+          <p className="font-semibold text-gray-800 font-poppins text-sm">{ot.aboutTitle}</p>
+          <p className="text-gray-600 font-inter text-sm mt-0.5">{ot.aboutDesc}</p>
         </div>
       </div>
 
@@ -286,7 +291,7 @@ function OpenTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          {language === "en" ? "Domestic Tour" : "Wisata Domestik"}
+          {ot.domestic}
         </button>
         <button
           onClick={() => setActiveTab("internasional")}
@@ -296,7 +301,7 @@ function OpenTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          {language === "en" ? "International Tour" : "Wisata Internasional"}
+          {ot.international}
         </button>
       </div>
 
@@ -306,16 +311,12 @@ function OpenTripContent() {
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-magenta" />
-            <h2 className="font-bold text-gray-800 font-poppins">
-              {language === "en" ? "Available Tickets" : "Tiket yang Tersedia"}
-            </h2>
+            <h2 className="font-bold text-gray-800 font-poppins">{ot.availableTickets}</h2>
             <span className="bg-magenta/10 text-magenta text-xs font-bold px-2 py-0.5 rounded-full font-poppins">
-              {data.length} {language === "en" ? "packages" : "paket"}
+              {data.length} {ot.packages}
             </span>
           </div>
-          <span className="text-sm text-gray-400 font-inter hidden sm:block">
-            {language === "en" ? "Select departure date" : "Pilih tanggal keberangkatan"}
-          </span>
+          <span className="text-sm text-gray-400 font-inter hidden sm:block">{ot.selectDate}</span>
         </div>
 
         {/* Date Picker Strip */}
@@ -332,9 +333,7 @@ function OpenTripContent() {
                 }`}
               >
                 <Calendar className="w-4 h-4" />
-                <span className="hidden md:inline">
-                  {language === "en" ? "Calendar" : "Kalender"}
-                </span>
+                <span className="hidden md:inline">{ot.calendar}</span>
               </button>
 
               {/* Calendar Popup */}
@@ -459,29 +458,25 @@ function OpenTripContent() {
           {!selectedDateKey || selectedTrips.length === 0 ? (
             <div className="text-center py-16">
               <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-200" />
-              <p className="font-semibold text-gray-500 font-poppins mb-1">
-                {language === "en" ? "No trips on this date" : "Tidak ada jadwal pada tanggal ini"}
-              </p>
-              <p className="text-sm text-gray-400 font-inter">
-                {language === "en" ? "Select a date with a pink dot" : "Pilih tanggal yang memiliki titik merah"}
-              </p>
+              <p className="font-semibold text-gray-500 font-poppins mb-1">{ot.noTripsOnDate}</p>
+              <p className="text-sm text-gray-400 font-inter">{ot.selectDateWithDot}</p>
             </div>
           ) : (
             <div className="space-y-4">
               {/* Label */}
               <p className="text-sm text-gray-500 font-inter">
-                {language === "en" ? "Showing" : "Menampilkan"}{" "}
-                <span className="font-semibold text-gray-800">{selectedTrips.length} paket</span>{" "}
-                {language === "en" ? "for departure on" : "untuk keberangkatan"}{" "}
+                {ot.showing}{" "}
+                <span className="font-semibold text-gray-800">{selectedTrips.length} {ot.packages}</span>{" "}
+                {ot.forDeparture}{" "}
                 <span className="font-semibold text-magenta">
                   {selectedDateKey
-                    ? formatDateLabel(new Date(selectedDateKey + "T00:00:00"))
+                    ? formatDateLabel(new Date(selectedDateKey + "T00:00:00"), language)
                     : ""}
                 </span>
               </p>
 
               {selectedTrips.map((item) => (
-                <TripCard key={item.id} item={item} language={language} />
+                <TripCard key={item.id} item={item} t={ot as unknown as Record<string, string>} />
               ))}
             </div>
           )}
@@ -490,14 +485,8 @@ function OpenTripContent() {
 
       {/* CTA */}
       <div className="mt-10 bg-dzawani-gradient rounded-2xl p-8 text-center text-white">
-        <h3 className="text-2xl font-bold font-poppins mb-2">
-          {language === "en" ? "Can&apos;t find a suitable schedule?" : "Tidak menemukan jadwal yang cocok?"}
-        </h3>
-        <p className="text-white/80 font-inter mb-5">
-          {language === "en"
-            ? "Contact us for the latest schedule information or consider our more flexible Private Trip package."
-            : "Hubungi kami untuk informasi jadwal terbaru atau pertimbangkan paket Private Trip yang lebih fleksibel."}
-        </p>
+        <h3 className="text-2xl font-bold font-poppins mb-2">{ot.ctaTitle}</h3>
+        <p className="text-white/80 font-inter mb-5">{ot.ctaDesc}</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href="https://wa.me/628112222254"
@@ -506,13 +495,13 @@ function OpenTripContent() {
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
-            {language === "en" ? "Contact via WhatsApp" : "Hubungi via WhatsApp"}
+            {ot.contactWhatsapp}
           </a>
           <Link
             href="/private-trip"
             className="bg-white/20 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white/30 transition-all font-poppins"
           >
-            {language === "en" ? "View Private Trip" : "Lihat Private Trip"}
+            {ot.viewPrivateTrip}
           </Link>
         </div>
       </div>
@@ -521,7 +510,8 @@ function OpenTripContent() {
 }
 
 export default function OpenTripPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
+  const ot = t.openTrip;
   return (
     <main>
       <Navbar />
@@ -531,15 +521,13 @@ export default function OpenTripPage() {
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-4">
             <span>✦</span>
-            {language === "en" ? "Open Trip Together — Fun, Affordable, Memorable!" : "Open Trip Bareng — Seru, Hemat, Berkesan!"}
+            {ot.heroBadge}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-3">
-            {language === "en" ? "Let&apos;s Go on an Adventure!" : "Hayu Urang Jalan-Jalan!"}
+            {ot.heroTitle}
           </h1>
           <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-            {language === "en"
-              ? "Join travelers from all over Indonesia — affordable trips, new friends, lasting memories. Limited quota, register now!"
-              : "Gabung sareng saderek-saderek ti sakuliah Indonesia — perjalanan hemat, teman anyar, kenangan abadi. Kuota terbatas, yuk daftar sekarang!"}
+            {ot.heroSubtitle}
           </p>
         </div>
       </div>

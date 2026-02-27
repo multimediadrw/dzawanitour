@@ -39,7 +39,7 @@ type PrivateTripItem = {
   includes: string;
 };
 
-function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: string }) {
+function PrivateTripCard({ item, pt }: { item: PrivateTripItem; pt: Record<string, string> }) {
   const [expanded, setExpanded] = useState(false);
   const includes = item.includes.split(",").map((s) => s.trim());
 
@@ -70,11 +70,15 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
               </span>
               <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
                 <Users className="w-3.5 h-3.5 text-ocean" />
-                {language === "en" ? `Min. ${item.minPax}` : `Min. ${item.minPax}`}
+                Min. {item.minPax}
               </span>
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                 <CheckCircle className="w-3.5 h-3.5" />
-                {language === "en" ? "Available" : "Tersedia"}
+                {pt.available || "Tersedia"}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs text-gray-400 font-inter">
+                <Clock className="w-3 h-3" />
+                {pt.flexibleDate}
               </span>
             </div>
 
@@ -96,9 +100,7 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
               onClick={() => setExpanded(!expanded)}
               className="mt-3 ml-6 inline-flex items-center gap-1 text-sm text-ocean font-semibold font-inter hover:underline"
             >
-              {expanded
-                ? (language === "en" ? "Hide prices" : "Sembunyikan harga")
-                : (language === "en" ? "See all prices" : "Lihat semua harga")}
+              {expanded ? pt.hidePrices : pt.seeAllPrices}
               {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
           </div>
@@ -106,9 +108,7 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
           {/* Right: Starting price + CTA */}
           <div className="flex flex-col items-end gap-3 flex-shrink-0">
             <div className="text-right">
-              <p className="text-xs text-gray-400 font-inter mb-0.5">
-                {language === "en" ? "Starting from" : "Mulai dari"}
-              </p>
+              <p className="text-xs text-gray-400 font-inter mb-0.5">{pt.startingFrom || "Mulai dari"}</p>
               <p className="text-2xl font-bold text-magenta font-poppins">
                 {formatRupiah(item.hargaPer2Pax)}
               </p>
@@ -124,7 +124,7 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold font-poppins text-sm bg-magenta text-white hover:bg-magenta/90 shadow-md shadow-magenta/20 active:scale-95 transition-all whitespace-nowrap"
             >
               <MessageCircle className="w-4 h-4" />
-              {language === "en" ? "Book Now" : "Pesan Sekarang"}
+              {pt.book}
             </a>
           </div>
         </div>
@@ -134,7 +134,7 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
       {expanded && (
         <div className="border-t border-gray-100 bg-gray-50/50 px-5 py-4">
           <p className="text-xs font-semibold text-gray-500 font-inter uppercase tracking-wider mb-3">
-            {language === "en" ? "Price per pax options" : "Pilihan harga per pax"}
+            {pt.pricePerPaxOptions || "Pilihan harga per pax"}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {paxOptions.map((opt) => (
@@ -159,7 +159,7 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
                   className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-magenta/10 text-magenta font-semibold font-poppins text-xs hover:bg-magenta/20 transition-all"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  {language === "en" ? "Choose" : "Pilih"}
+                  {pt.choose || "Pilih"}
                 </a>
               </div>
             ))}
@@ -173,7 +173,8 @@ function PrivateTripCard({ item, language }: { item: PrivateTripItem; language: 
 function PrivateTripContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"domestik" | "internasional">("domestik");
-  const { language } = useLanguage();
+  const { t } = useLanguage();
+  const pt = t.privateTrip;
 
   useEffect(() => {
     const kategori = searchParams.get("kategori");
@@ -186,28 +187,22 @@ function PrivateTripContent() {
   const features = [
     {
       icon: Shield,
-      title: language === "en" ? "Exclusive & Private" : "Eksklusif & Privat",
-      desc: language === "en"
-        ? "Just you and your group. No other participants will join."
-        : "Hanya Anda dan rombongan. Tidak ada peserta lain yang bergabung.",
+      title: pt.feature1Title,
+      desc: pt.feature1Desc,
       color: "text-magenta",
       bg: "bg-pink-50",
     },
     {
       icon: Clock,
-      title: language === "en" ? "Flexible Schedule" : "Jadwal Fleksibel",
-      desc: language === "en"
-        ? "Set your own departure date at your convenience."
-        : "Tentukan sendiri tanggal keberangkatan sesuai kenyamanan Anda.",
+      title: pt.feature2Title,
+      desc: pt.feature2Desc,
       color: "text-ocean",
       bg: "bg-sky-50",
     },
     {
       icon: Star,
-      title: language === "en" ? "Custom Itinerary" : "Itinerary Kustom",
-      desc: language === "en"
-        ? "Routes and activities can be tailored to your group preferences."
-        : "Rute dan aktivitas dapat disesuaikan dengan preferensi rombongan.",
+      title: pt.feature3Title,
+      desc: pt.feature3Desc,
       color: "text-purple",
       bg: "bg-purple-50",
     },
@@ -240,7 +235,7 @@ function PrivateTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          {language === "en" ? "Domestic Tour" : "Wisata Domestik"}
+          {pt.domestic}
         </button>
         <button
           onClick={() => setActiveTab("internasional")}
@@ -250,7 +245,7 @@ function PrivateTripContent() {
               : "bg-white text-magenta border-2 border-magenta/30 hover:border-magenta"
           }`}
         >
-          {language === "en" ? "International Tour" : "Wisata Internasional"}
+          {pt.international}
         </button>
       </div>
 
@@ -262,46 +257,31 @@ function PrivateTripContent() {
             <Shield className="w-5 h-5 text-magenta" />
             <h2 className="font-bold text-gray-800 font-poppins">
               Private Trip —{" "}
-              {activeTab === "domestik"
-                ? (language === "en" ? "Domestic Tour" : "Wisata Domestik")
-                : (language === "en" ? "International Tour" : "Wisata Internasional")}
+              {activeTab === "domestik" ? pt.domestic : pt.international}
             </h2>
             <span className="bg-magenta/10 text-magenta text-xs font-bold px-2 py-0.5 rounded-full font-poppins">
-              {data.length} {language === "en" ? "packages" : "paket"}
+              {data.length} {pt.packagesAvailable}
             </span>
           </div>
-          <span className="text-sm text-gray-400 font-inter hidden sm:block">
-            {language === "en" ? "Flexible departure date" : "Tanggal keberangkatan fleksibel"}
-          </span>
         </div>
 
         {/* Cards */}
         <div className="p-6 space-y-4">
           {data.map((item) => (
-            <PrivateTripCard key={item.id} item={item} language={language} />
+            <PrivateTripCard key={item.id} item={item} pt={pt as unknown as Record<string, string>} />
           ))}
         </div>
 
         {/* Note */}
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-          <p className="text-xs text-gray-500 font-inter">
-            {language === "en"
-              ? "* Prices above are estimates per person. Final prices may vary depending on departure date, hotel choice, and special requirements. Contact us for the best offer."
-              : "* Harga di atas merupakan estimasi per orang. Harga final dapat berbeda tergantung tanggal keberangkatan, pilihan hotel, dan kebutuhan khusus. Hubungi kami untuk penawaran terbaik."}
-          </p>
+          <p className="text-xs text-gray-500 font-inter">{pt.priceEstimate}</p>
         </div>
       </div>
 
       {/* CTA */}
       <div className="mt-10 bg-dzawani-gradient rounded-2xl p-8 text-center text-white">
-        <h3 className="text-2xl font-bold font-poppins mb-2">
-          {language === "en" ? "Ready for an Exclusive Trip?" : "Siap untuk Perjalanan Eksklusif?"}
-        </h3>
-        <p className="text-white/80 font-inter mb-5">
-          {language === "en"
-            ? "Contact us now and we will help design the perfect trip for you and your group."
-            : "Hubungi kami sekarang dan kami akan membantu merancang perjalanan sempurna untuk Anda dan rombongan."}
-        </p>
+        <h3 className="text-2xl font-bold font-poppins mb-2">{pt.readyExclusive}</h3>
+        <p className="text-white/80 font-inter mb-5">{pt.readyExclusiveDesc}</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href="https://wa.me/628112222254"
@@ -310,13 +290,13 @@ function PrivateTripContent() {
             className="bg-white text-magenta font-semibold py-3 px-6 rounded-xl hover:bg-white/90 transition-all font-poppins inline-flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
-            {language === "en" ? "Contact via WhatsApp" : "Hubungi via WhatsApp"}
+            {pt.contactWhatsappNow}
           </a>
           <Link
             href="/open-trip"
             className="bg-white/20 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white/30 transition-all font-poppins"
           >
-            {language === "en" ? "View Open Trip" : "Lihat Open Trip"}
+            {pt.viewOpenTrip}
           </Link>
         </div>
       </div>
@@ -325,7 +305,8 @@ function PrivateTripContent() {
 }
 
 export default function PrivateTripPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
+  const pt = t.privateTrip;
   return (
     <main>
       <Navbar />
@@ -335,15 +316,13 @@ export default function PrivateTripPage() {
         <div className="relative z-10 container mx-auto px-4 max-w-7xl text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full font-poppins mb-4">
             <span>✦</span>
-            {language === "en" ? "Private Trip — Exclusive, Flexible, Memorable!" : "Private Trip — Eksklusif, Fleksibel, Berkesan!"}
+            {pt.heroBadge}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white font-poppins mb-3">
-            {language === "en" ? "Your Exclusive Journey" : "Perjalanan Eksklusif Anda"}
+            {pt.heroTitle}
           </h1>
           <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-            {language === "en"
-              ? "Travel with your own group, set your own schedule, and enjoy a personalized experience. We handle everything for you."
-              : "Berwisata bersama rombongan sendiri, tentukan jadwal sendiri, dan nikmati pengalaman yang dipersonalisasi. Kami urus semuanya untuk Anda."}
+            {pt.heroSubtitle}
           </p>
         </div>
       </div>
