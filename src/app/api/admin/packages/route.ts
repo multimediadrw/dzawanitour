@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dzawanitour-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'dzawani-secret-key-2024';
 
 // Middleware to verify token
 function verifyToken(request: NextRequest) {
@@ -21,6 +22,8 @@ function verifyToken(request: NextRequest) {
 }
 
 // GET - List all packages with pagination and filters
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     verifyToken(request);
@@ -60,7 +63,7 @@ export async function GET(request: NextRequest) {
       prisma.tourPackage.count({ where }),
     ]);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       packages,
       pagination: {
         page,
@@ -69,6 +72,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
+
+    // Disable caching for admin API
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    return response;
   } catch (error: any) {
     console.error('GET packages error:', error);
     return NextResponse.json(
@@ -100,6 +107,12 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date(),
       },
     });
+
+    // Revalidate pages
+    revalidatePath('/open-trip');
+    revalidatePath('/private-trip');
+    revalidatePath('/admin/dashboard/packages');
+    revalidatePath('/');
 
     return NextResponse.json({
       message: 'Paket berhasil dibuat',

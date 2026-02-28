@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,7 +11,9 @@ export async function GET(request: NextRequest) {
     if (!token) token = request.cookies.get("admin_token")?.value;
     if (!token || !verifyToken(token)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const settings = await prisma.setting.findMany();
-    return NextResponse.json(settings);
+    const response = NextResponse.json(settings);
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    return response;
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
   }
@@ -33,6 +38,8 @@ export async function PUT(request: NextRequest) {
       },
     });
     
+    revalidatePath("/admin/dashboard/settings");
+    revalidatePath("/");
     return NextResponse.json(setting);
   } catch (error) {
     return NextResponse.json({ error: "Failed to update setting" }, { status: 500 });

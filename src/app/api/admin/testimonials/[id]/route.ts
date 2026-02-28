@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(
   request: NextRequest,
@@ -62,6 +65,8 @@ export async function PUT(
       },
     });
 
+    revalidatePath("/admin/dashboard/testimonials");
+    revalidatePath("/");
     return NextResponse.json(testimonial);
   } catch (error) {
     console.error("Error updating testimonial:", error);
@@ -87,6 +92,8 @@ export async function DELETE(
       where: { id: params.id },
     });
 
+    revalidatePath("/admin/dashboard/testimonials");
+    revalidatePath("/");
     return NextResponse.json({ message: "Testimonial deleted successfully" });
   } catch (error) {
     console.error("Error deleting testimonial:", error);

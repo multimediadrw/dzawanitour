@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -36,6 +39,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         order: body.order,
       },
     });
+    revalidatePath("/admin/dashboard/faqs");
+    revalidatePath("/faq");
     return NextResponse.json(faq);
   } catch (error) {
     return NextResponse.json({ error: "Failed to update FAQ" }, { status: 500 });
@@ -50,6 +55,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     await prisma.fAQ.delete({ where: { id: params.id } });
+    revalidatePath("/admin/dashboard/faqs");
+    revalidatePath("/faq");
     return NextResponse.json({ message: "FAQ deleted successfully" });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete FAQ" }, { status: 500 });

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +13,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const faqs = await prisma.fAQ.findMany({ orderBy: { order: "asc" } });
-    return NextResponse.json(faqs);
+    const response = NextResponse.json(faqs);
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    return response;
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch FAQs" }, { status: 500 });
   }
@@ -34,6 +39,8 @@ export async function POST(request: NextRequest) {
         order: body.order || 0,
       },
     });
+    revalidatePath("/admin/dashboard/faqs");
+    revalidatePath("/faq");
     return NextResponse.json(faq, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to create FAQ" }, { status: 500 });

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +17,9 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(testimonials);
+    const response = NextResponse.json(testimonials);
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    return response;
   } catch (error) {
     console.error("Error fetching testimonials:", error);
     return NextResponse.json(
@@ -48,6 +53,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidatePath("/admin/dashboard/testimonials");
+    revalidatePath("/");
     return NextResponse.json(testimonial, { status: 201 });
   } catch (error) {
     console.error("Error creating testimonial:", error);

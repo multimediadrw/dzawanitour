@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dzawanitour-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'dzawani-secret-key-2024';
 
 export async function POST(request: NextRequest) {
   try {

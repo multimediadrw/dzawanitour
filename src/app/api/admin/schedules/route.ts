@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dzawanitour-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'dzawani-secret-key-2024';
 
 function verifyToken(request: NextRequest) {
   let token = request.headers.get('authorization')?.replace('Bearer ', '');
