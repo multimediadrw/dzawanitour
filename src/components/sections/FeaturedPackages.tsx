@@ -1,15 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import TourCard from "@/components/ui/TourCard";
-import { tourPackages } from "@/lib/data";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+interface TourPackage {
+  id: string;
+  title: string;
+  titleEn?: string;
+  slug: string;
+  type: string;
+  category: string;
+  destination: string;
+  destinationEn?: string;
+  duration: string;
+  durationEn?: string;
+  price: number;
+  priceDiscount?: number;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  highlights: string[];
+  highlightsEn?: string[];
+  includes: string[];
+  includesEn?: string[];
+  description: string;
+  descriptionEn?: string;
+  badge?: string;
+  featured: boolean;
+  status: string;
+}
 
 export default function FeaturedPackages() {
   const [activeCategory, setActiveCategory] = useState("semua");
   const { language } = useLanguage();
+  const [packages, setPackages] = useState<TourPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/packages")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPackages(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const categories = [
     { id: "semua", label: language === "en" ? "All Packages" : "Semua Paket" },
@@ -19,8 +59,8 @@ export default function FeaturedPackages() {
 
   const filteredPackages =
     activeCategory === "semua"
-      ? tourPackages
-      : tourPackages.filter((p) => p.category === activeCategory);
+      ? packages
+      : packages.filter((p) => p.category === activeCategory);
 
   return (
     <section className="py-20 bg-gray-50">
@@ -58,11 +98,19 @@ export default function FeaturedPackages() {
         </div>
 
         {/* Tour Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPackages.slice(0, 6).map((tour) => (
-            <TourCard key={tour.id} tour={tour} variant="featured" />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-2xl h-80 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPackages.slice(0, 6).map((tour) => (
+              <TourCard key={tour.id} tour={tour} variant="featured" />
+            ))}
+          </div>
+        )}
 
         {/* View All Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">

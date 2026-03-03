@@ -5,41 +5,77 @@ import Link from "next/link";
 import { ChevronRight, Star } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const heroSlides = [
+interface HeroSlide {
+  id: string;
+  title: string;
+  titleEn?: string;
+  subtitle: string;
+  subtitleEn?: string;
+  image: string;
+  order: number;
+}
+
+const defaultSlides: HeroSlide[] = [
   {
+    id: "1",
     image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&q=90",
     title: "Bali Paradise",
+    titleEn: "Bali Paradise",
     subtitle: "Pulau Dewata yang Memukau",
-    subtitle_en: "The Enchanting Island of the Gods",
+    subtitleEn: "The Enchanting Island of the Gods",
+    order: 1,
   },
   {
+    id: "2",
     image: "https://images.unsplash.com/photo-1527838832700-5059252407fa?w=1920&q=90",
     title: "Istanbul & Cappadocia",
+    titleEn: "Istanbul & Cappadocia",
     subtitle: "Keajaiban Dua Benua",
-    subtitle_en: "The Wonder of Two Continents",
+    subtitleEn: "The Wonder of Two Continents",
+    order: 2,
   },
   {
+    id: "3",
     image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=90",
     title: "Jepang Sakura",
-    title_en: "Japan Sakura",
+    titleEn: "Japan Sakura",
     subtitle: "Negeri Matahari Terbit",
-    subtitle_en: "Land of the Rising Sun",
+    subtitleEn: "Land of the Rising Sun",
+    order: 3,
   },
 ];
 
 export default function HeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
-
+  const [slides, setSlides] = useState<HeroSlide[]>(defaultSlides);
   const { t, language } = useLanguage();
+
+  useEffect(() => {
+    fetch("/api/public/hero-slides")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Auto-scroll carousel every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+      setActiveSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
+
+  const currentSlide = slides[activeSlide] || slides[0];
+
+  const getTitle = (slide: HeroSlide) =>
+    language === "en" && slide.titleEn ? slide.titleEn : slide.title;
+
+  const getSubtitle = (slide: HeroSlide) =>
+    language === "en" && slide.subtitleEn ? slide.subtitleEn : slide.subtitle;
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -47,7 +83,7 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-          style={{ backgroundImage: `url(${heroSlides[activeSlide].image})` }}
+          style={{ backgroundImage: `url(${currentSlide?.image})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-purple/80 via-purple/60 to-purple/90" />
         <div className="absolute inset-0 bg-gradient-to-r from-purple/40 to-transparent" />
@@ -106,13 +142,11 @@ export default function HeroSection() {
             ))}
           </div>
         </div>
-
-
       </div>
 
       {/* Slide Indicators */}
       <div className="absolute bottom-8 right-8 flex items-center gap-2">
-        {heroSlides.map((_, index) => (
+        {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setActiveSlide(index)}
@@ -124,10 +158,12 @@ export default function HeroSection() {
       </div>
 
       {/* Current Slide Info */}
-      <div className="absolute bottom-8 left-8 text-white/60">
-        <p className="text-xs font-inter">{language === "en" && heroSlides[activeSlide].title_en ? heroSlides[activeSlide].title_en : heroSlides[activeSlide].title}</p>
-        <p className="text-xs font-inter">{language === "en" && heroSlides[activeSlide].subtitle_en ? heroSlides[activeSlide].subtitle_en : heroSlides[activeSlide].subtitle}</p>
-      </div>
+      {currentSlide && (
+        <div className="absolute bottom-8 left-8 text-white/60">
+          <p className="text-xs font-inter">{getTitle(currentSlide)}</p>
+          <p className="text-xs font-inter">{getSubtitle(currentSlide)}</p>
+        </div>
+      )}
     </section>
   );
 }

@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { privateTripDomestik, privateTripInternasional } from "@/lib/data";
+// Data now fetched from database API
 import {
   MessageCircle,
   Shield,
@@ -74,6 +74,7 @@ type PrivateTripItem = {
   hargaPer6Pax: number;
   status: string;
   includes: string;
+  pricing?: { pax: number; price: number }[];
 };
 
 function PrivateTripCard({ item, pt, language }: { item: PrivateTripItem; pt: Record<string, string>; language: string }) {
@@ -219,6 +220,49 @@ function PrivateTripContent() {
   const [activeTab, setActiveTab] = useState<"domestik" | "internasional">("domestik");
   const { t } = useLanguage();
   const pt = t.privateTrip;
+  const [domestikData, setDomestikData] = useState<PrivateTripItem[]>([]);
+  const [internasionalData, setInternasionalData] = useState<PrivateTripItem[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  useEffect(() => {
+    async function fetchPrivateTrips() {
+      setLoadingData(true);
+      try {
+        const [domRes, intRes] = await Promise.all([
+          fetch("/api/public/trip-schedules?category=private_domestik"),
+          fetch("/api/public/trip-schedules?category=private_internasional"),
+        ]);
+        const domRaw = await domRes.json();
+        const intRaw = await intRes.json();
+        // Transform DB format to PrivateTripItem format
+        const transform = (items: { id: string; destinasi: string; durasi: string; harga: number; status: string; includes: string; pricing?: { pax: number; price: number }[] }[]): PrivateTripItem[] =>
+          items.map((item) => {
+            const p2 = item.pricing?.find((p) => p.pax === 2)?.price || item.harga;
+            const p4 = item.pricing?.find((p) => p.pax === 4)?.price || item.harga;
+            const p6 = item.pricing?.find((p) => p.pax === 6)?.price || item.harga;
+            return {
+              id: item.id,
+              destinasi: item.destinasi,
+              durasi: item.durasi,
+              minPax: "2 Orang",
+              hargaPer2Pax: p2,
+              hargaPer4Pax: p4,
+              hargaPer6Pax: p6,
+              status: item.status,
+              includes: item.includes,
+              pricing: item.pricing,
+            };
+          });
+        setDomestikData(transform(Array.isArray(domRaw) ? domRaw : []));
+        setInternasionalData(transform(Array.isArray(intRaw) ? intRaw : []));
+      } catch (err) {
+        console.error("Failed to fetch private trips:", err);
+      } finally {
+        setLoadingData(false);
+      }
+    }
+    fetchPrivateTrips();
+  }, []);
 
   useEffect(() => {
     const kategori = searchParams.get("kategori");
@@ -226,7 +270,7 @@ function PrivateTripContent() {
     else setActiveTab("domestik");
   }, [searchParams]);
 
-  const data: PrivateTripItem[] = activeTab === "domestik" ? privateTripDomestik : privateTripInternasional;
+  const data: PrivateTripItem[] = activeTab === "domestik" ? domestikData : internasionalData;
 
   const features = [
     {

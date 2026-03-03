@@ -1,17 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { faqs } from "@/lib/data";
 import { ChevronDown, ChevronUp, HelpCircle, FileText, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+interface FAQ {
+  id: string;
+  question: string;
+  questionEn?: string;
+  question_en?: string;
+  answer: string;
+  answerEn?: string;
+  answer_en?: string;
+  category: string;
+  categoryEn?: string;
+  category_en?: string;
+}
 
 export default function FAQPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [openFaq, setOpenFaq] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<"faq" | "syarat">("faq");
   const { language } = useLanguage();
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [loadingFaqs, setLoadingFaqs] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/faqs")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setFaqs(data);
+        setLoadingFaqs(false);
+      })
+      .catch(() => setLoadingFaqs(false));
+  }, []);
 
   const categories = language === "en"
     ? ["All", "General", "Booking", "Price", "Payment", "Policy", "Package", "Guarantee"]
@@ -31,6 +55,13 @@ export default function FAQPage() {
   const filteredFaqs = activeCategoryId === "all"
     ? faqs
     : faqs.filter((f) => f.category === activeCategoryId);
+
+  const getFaqQuestion = (faq: FAQ) =>
+    language === "en" ? (faq.questionEn || faq.question_en || faq.question) : faq.question;
+  const getFaqAnswer = (faq: FAQ) =>
+    language === "en" ? (faq.answerEn || faq.answer_en || faq.answer) : faq.answer;
+  const getFaqCategory = (faq: FAQ) =>
+    language === "en" ? (faq.categoryEn || faq.category_en || faq.category) : faq.category;
 
   const syaratKetentuan = language === "en" ? [
     {
@@ -254,6 +285,13 @@ export default function FAQPage() {
             </div>
 
             {/* FAQ Accordion */}
+            {loadingFaqs ? (
+              <div className="space-y-3">
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="bg-white rounded-2xl border border-gray-100 h-16 animate-pulse" />
+                ))}
+              </div>
+            ) : (
             <div className="space-y-3">
               {filteredFaqs.map((faq) => (
                 <div
@@ -269,12 +307,12 @@ export default function FAQPage() {
                         <HelpCircle className="w-3.5 h-3.5" />
                       </span>
                       <span className="font-semibold text-gray-800 font-poppins text-sm pr-4">
-                        {language === "en" && faq.question_en ? faq.question_en : faq.question}
+                        {getFaqQuestion(faq)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-xs text-gray-400 font-inter bg-gray-100 px-2 py-1 rounded-full hidden sm:block">
-                        {language === "en" && faq.category_en ? faq.category_en : faq.category}
+                        {getFaqCategory(faq)}
                       </span>
                       {openFaq === faq.id ? (
                         <ChevronUp className="w-5 h-5 text-magenta" />
@@ -287,7 +325,7 @@ export default function FAQPage() {
                     <div className="px-6 pb-5">
                       <div className="pl-9">
                         <p className="text-gray-600 font-inter text-sm leading-relaxed">
-                          {language === "en" && faq.answer_en ? faq.answer_en : faq.answer}
+                          {getFaqAnswer(faq)}
                         </p>
                       </div>
                     </div>
@@ -295,6 +333,8 @@ export default function FAQPage() {
                 </div>
               ))}
             </div>
+
+            )}
 
             {/* Still have questions */}
             <div className="mt-10 bg-ocean-50 rounded-2xl p-6 text-center">

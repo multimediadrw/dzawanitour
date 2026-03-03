@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { openTripDomestik, openTripInternasional } from "@/lib/data";
+// Data now fetched from database API
 import {
   MessageCircle,
   Users,
@@ -257,6 +257,30 @@ function OpenTripContent() {
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const scrollRef = useRef<HTMLDivElement>(null);
   const { language, t } = useLanguage();
+  const [domestikData, setDomestikData] = useState<TripItem[]>([]);
+  const [internasionalData, setInternasionalData] = useState<TripItem[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  useEffect(() => {
+    async function fetchSchedules() {
+      setLoadingData(true);
+      try {
+        const [domRes, intRes] = await Promise.all([
+          fetch("/api/public/trip-schedules?category=domestik"),
+          fetch("/api/public/trip-schedules?category=internasional"),
+        ]);
+        const domData = await domRes.json();
+        const intData = await intRes.json();
+        setDomestikData(Array.isArray(domData) ? domData : []);
+        setInternasionalData(Array.isArray(intData) ? intData : []);
+      } catch (err) {
+        console.error("Failed to fetch schedules:", err);
+      } finally {
+        setLoadingData(false);
+      }
+    }
+    fetchSchedules();
+  }, []);
 
   const DAY_NAMES = language === "en" ? DAY_NAMES_EN : DAY_NAMES_ID;
   const MONTH_NAMES = language === "en" ? MONTH_NAMES_EN : MONTH_NAMES_ID;
@@ -268,7 +292,7 @@ function OpenTripContent() {
     else setActiveTab("domestik");
   }, [searchParams]);
 
-  const data: TripItem[] = activeTab === "domestik" ? openTripDomestik : openTripInternasional;
+  const data: TripItem[] = activeTab === "domestik" ? domestikData : internasionalData;
 
   // Build map: dateKey -> trips
   const tripsByDate: Record<string, TripItem[]> = {};

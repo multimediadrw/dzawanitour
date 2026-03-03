@@ -1,12 +1,42 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Star, Quote } from "lucide-react";
-import { testimonials } from "@/lib/data";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+interface Testimonial {
+  id: string;
+  name: string;
+  location: string;
+  packageName?: string;
+  tourPackage?: string;
+  rating: number;
+  comment: string;
+  commentEn?: string;
+  comment_en?: string;
+  avatar: string;
+  date: string;
+  dateEn?: string;
+  date_en?: string;
+}
 
 export default function TestimonialsSection() {
   const { language } = useLanguage();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/testimonials")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTestimonials(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <section className="py-20 bg-white">
@@ -62,54 +92,74 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative"
-            >
-              {/* Quote Icon */}
-              <div className="absolute top-5 right-5">
-                <Quote className="w-8 h-8 text-magenta-100 fill-magenta-100" />
-              </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="bg-white border border-gray-100 rounded-2xl h-48 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {testimonials.map((testimonial) => {
+              const commentText = language === "en"
+                ? (testimonial.commentEn || testimonial.comment_en || testimonial.comment)
+                : testimonial.comment;
+              const dateText = language === "en"
+                ? (testimonial.dateEn || testimonial.date_en || testimonial.date)
+                : testimonial.date;
+              const packageLabel = testimonial.packageName || testimonial.tourPackage || "";
 
-              {/* Stars */}
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                ))}
-              </div>
+              return (
+                <div
+                  key={testimonial.id}
+                  className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 relative"
+                >
+                  {/* Quote Icon */}
+                  <div className="absolute top-5 right-5">
+                    <Quote className="w-8 h-8 text-magenta-100 fill-magenta-100" />
+                  </div>
 
-              {/* Comment */}
-              <p className="text-gray-600 text-sm font-inter leading-relaxed mb-5 line-clamp-4">
-                &ldquo;{language === "en" && testimonial.comment_en ? testimonial.comment_en : testimonial.comment}&rdquo;
-              </p>
+                  {/* Stars */}
+                  <div className="flex items-center gap-1 mb-4">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    ))}
+                  </div>
 
-              {/* Tour Package */}
-              <div className="bg-ocean-50 text-ocean-700 text-xs px-3 py-1.5 rounded-full inline-block font-inter mb-4">
-                {testimonial.tourPackage}
-              </div>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm font-poppins">{testimonial.name}</p>
-                  <p className="text-gray-400 text-xs font-inter">
-                    {testimonial.location} · {language === "en" && testimonial.date_en ? testimonial.date_en : testimonial.date}
+                  {/* Comment */}
+                  <p className="text-gray-600 text-sm font-inter leading-relaxed mb-5 line-clamp-4">
+                    &ldquo;{commentText}&rdquo;
                   </p>
+
+                  {/* Tour Package */}
+                  {packageLabel && (
+                    <div className="bg-ocean-50 text-ocean-700 text-xs px-3 py-1.5 rounded-full inline-block font-inter mb-4">
+                      {packageLabel}
+                    </div>
+                  )}
+
+                  {/* Author */}
+                  <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                      <Image
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800 text-sm font-poppins">{testimonial.name}</p>
+                      <p className="text-gray-400 text-xs font-inter">
+                        {testimonial.location} · {dateText}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

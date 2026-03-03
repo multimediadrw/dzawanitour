@@ -1,13 +1,38 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
-import { destinations } from "@/lib/data";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+interface Destination {
+  id: string;
+  name: string;
+  nameEn?: string;
+  country: string;
+  countryEn?: string;
+  category: string;
+  image: string;
+  packageCount: number;
+}
 
 export default function DestinationsSection() {
   const { language } = useLanguage();
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/destinations")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setDestinations(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <section className="py-20 bg-gray-50">
@@ -37,48 +62,62 @@ export default function DestinationsSection() {
         </div>
 
         {/* Destinations Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {destinations.map((dest, index) => (
-            <Link
-              key={dest.id}
-              href={`/open-trip`}
-              className={`group relative rounded-2xl overflow-hidden cursor-pointer ${
-                index === 0 ? "col-span-2 row-span-2 md:col-span-2 md:row-span-2" : ""
-              }`}
-              style={{ height: index === 0 ? "320px" : "150px" }}
-            >
-              <Image
-                src={dest.image}
-                alt={dest.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-purple/80 via-purple/20 to-transparent" />
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-gray-200 rounded-2xl h-36 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {destinations.map((dest, index) => {
+              const displayName = language === "en" && dest.nameEn ? dest.nameEn : dest.name;
+              const displayCountry = language === "en" && dest.countryEn ? dest.countryEn : dest.country;
+              return (
+                <Link
+                  key={dest.id}
+                  href={`/open-trip`}
+                  className={`group relative rounded-2xl overflow-hidden cursor-pointer ${
+                    index === 0 ? "col-span-2 row-span-2 md:col-span-2 md:row-span-2" : ""
+                  }`}
+                  style={{ height: index === 0 ? "320px" : "150px" }}
+                >
+                  <Image
+                    src={dest.image}
+                    alt={displayName}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple/80 via-purple/20 to-transparent" />
 
-              {/* Category Badge */}
-              <span className="absolute top-3 left-3 text-xs font-medium bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-full font-inter">
-                {dest.category}
-              </span>
+                  {/* Category Badge */}
+                  <span className="absolute top-3 left-3 text-xs font-medium bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-full font-inter">
+                    {dest.category === "domestik"
+                      ? language === "en" ? "Domestic" : "Domestik"
+                      : language === "en" ? "International" : "Internasional"}
+                  </span>
 
-              {/* Content */}
-              <div className="absolute bottom-3 left-3 right-3">
-                <div className="flex items-center gap-1 mb-1">
-                  <MapPin className="w-3 h-3 text-ocean" />
-                  <span className="text-white/70 text-xs font-inter">{dest.country}</span>
-                </div>
-                <h3 className={`text-white font-bold font-poppins ${index === 0 ? "text-2xl" : "text-sm"}`}>
-                  {dest.name}
-                </h3>
-                <p className="text-white/60 text-xs font-inter">
-                  {dest.packageCount} {language === "en" ? "packages available" : "paket tersedia"}
-                </p>
-              </div>
+                  {/* Content */}
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="flex items-center gap-1 mb-1">
+                      <MapPin className="w-3 h-3 text-ocean" />
+                      <span className="text-white/70 text-xs font-inter">{displayCountry}</span>
+                    </div>
+                    <h3 className={`text-white font-bold font-poppins ${index === 0 ? "text-2xl" : "text-sm"}`}>
+                      {displayName}
+                    </h3>
+                    <p className="text-white/60 text-xs font-inter">
+                      {dest.packageCount} {language === "en" ? "packages available" : "paket tersedia"}
+                    </p>
+                  </div>
 
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-magenta/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Link>
-          ))}
-        </div>
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-magenta/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
