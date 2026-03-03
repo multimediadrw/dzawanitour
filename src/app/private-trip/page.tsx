@@ -42,6 +42,9 @@ type PrivateTripItem = {
 function PrivateTripCard({ item, pt, language }: { item: PrivateTripItem; pt: Record<string, string>; language: string }) {
   const [expanded, setExpanded] = useState(false);
   const includes = item.includes.split(",").map((s) => s.trim());
+  // Convert Indonesian data values to English when language is EN
+  const displayDurasi = language === "en" && item.durasi === "Fleksibel" ? "Flexible" : item.durasi;
+  const displayMinPax = language === "en" ? item.minPax.replace("Orang", "People") : item.minPax;
 
   const paxOptions = [
     { label: "2 Pax", price: item.hargaPer2Pax },
@@ -66,11 +69,11 @@ function PrivateTripCard({ item, pt, language }: { item: PrivateTripItem; pt: Re
             <div className="flex flex-wrap items-center gap-3 mb-3 ml-6">
               <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
                 <Clock className="w-3.5 h-3.5 text-ocean" />
-                {item.durasi}
+                {displayDurasi}
               </span>
               <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
                 <Users className="w-3.5 h-3.5 text-ocean" />
-                Min. {item.minPax}
+                Min. {displayMinPax}
               </span>
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                 <CheckCircle className="w-3.5 h-3.5" />
