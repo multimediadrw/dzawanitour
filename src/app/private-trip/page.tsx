@@ -19,6 +19,43 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
+// Translation map for common Indonesian words in includes/facilities
+const INCLUDES_TRANSLATION: Record<string, string> = {
+  "Transportasi Bus Pariwisata AC": "AC Tourism Bus",
+  "Tiket Masuk objek wisata": "Entrance Tickets",
+  "Parkir objek wisata": "Parking at Sites",
+  "Tour Leader & Local Guide": "Tour Leader & Local Guide",
+  "Refreshment": "Refreshment",
+  "Hotel": "Hotel",
+  "Transport": "Transport",
+  "Transport Private": "Private Transport",
+  "Guide": "Guide",
+  "Guide Private": "Private Guide",
+  "Makan": "Meals",
+  "Makan Pagi": "Breakfast",
+  "Makan Siang": "Lunch",
+  "Makan 3x Sehari": "3 Meals/Day",
+  "Kapal Phinisi": "Phinisi Boat",
+  "Jeep": "Jeep",
+  "Pesawat PP": "Round-trip Flight",
+  "Visa": "Visa",
+  "Visa Schengen": "Schengen Visa",
+  "Desert Safari": "Desert Safari",
+  "Desert Safari Private": "Private Desert Safari",
+  "JR Pass": "JR Pass",
+  "JR Pass, Guide Private": "JR Pass, Private Guide",
+  "Fast Boat": "Fast Boat",
+  "Speedboat": "Speedboat",
+  "Diving": "Diving",
+  "Full Board": "Full Board",
+  "Resort": "Resort",
+};
+
+function translateIncludesItem(item: string, language: string): string {
+  if (language !== "en") return item;
+  return INCLUDES_TRANSLATION[item.trim()] || item;
+}
+
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -93,7 +130,7 @@ function PrivateTripCard({ item, pt, language }: { item: PrivateTripItem; pt: Re
                   className="inline-flex items-center gap-1 text-xs bg-gray-50 text-gray-600 px-2.5 py-1 rounded-full font-inter border border-gray-100"
                 >
                   <CheckCircle className="w-3 h-3 text-green-500" />
-                  {inc}
+                  {translateIncludesItem(inc, language)}
                 </span>
               ))}
             </div>
