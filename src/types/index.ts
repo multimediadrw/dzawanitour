@@ -3,6 +3,7 @@ export interface TourPackage {
   title: string;
   destination: string;
   duration: string;
+  duration_en?: string;
   price: number;
   originalPrice?: number;
   image: string;
@@ -10,8 +11,11 @@ export interface TourPackage {
   rating: number;
   reviewCount: number;
   highlights: string[];
+  highlights_en?: string[];
   includes: string[];
+  includes_en?: string[];
   description: string;
+  description_en?: string;
   badge?: string;
   isPopular?: boolean;
   isBestSeller?: boolean;
@@ -23,9 +27,11 @@ export interface Testimonial {
   location: string;
   rating: number;
   comment: string;
+  comment_en?: string;
   avatar: string;
   tourPackage: string;
   date: string;
+  date_en?: string;
 }
 
 export interface Destination {
@@ -48,7 +54,9 @@ export interface TeamMember {
 export interface FAQ {
   id: string;
   question: string;
+  question_en?: string;
   answer: string;
+  answer_en?: string;
   category: string;
+  category_en?: string;
 }
-

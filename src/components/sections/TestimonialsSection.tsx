@@ -82,7 +82,7 @@ export default function TestimonialsSection() {
 
               {/* Comment */}
               <p className="text-gray-600 text-sm font-inter leading-relaxed mb-5 line-clamp-4">
-                &ldquo;{testimonial.comment}&rdquo;
+                &ldquo;{language === "en" && testimonial.comment_en ? testimonial.comment_en : testimonial.comment}&rdquo;
               </p>
 
               {/* Tour Package */}
@@ -103,7 +103,7 @@ export default function TestimonialsSection() {
                 <div>
                   <p className="font-semibold text-gray-800 text-sm font-poppins">{testimonial.name}</p>
                   <p className="text-gray-400 text-xs font-inter">
-                    {testimonial.location} · {testimonial.date}
+                    {testimonial.location} · {language === "en" && testimonial.date_en ? testimonial.date_en : testimonial.date}
                   </p>
                 </div>
               </div>

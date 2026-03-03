@@ -115,6 +115,48 @@ function StatusBadge({ status, t }: { status: string; t: { available: string; al
   );
 }
 
+const includesTranslationMap: Record<string, string> = {
+  "Makan": "Meals",
+  "Makan Pagi": "Breakfast",
+  "Makan Siang": "Lunch",
+  "Makan Malam": "Dinner",
+  "Makan 3x Sehari": "3x Daily Meals",
+  "Kapal Phinisi": "Phinisi Boat",
+  "Pesawat PP": "Round-Trip Flights",
+  "Tiket Pesawat PP": "Round-Trip Flights",
+  "Hotel Bintang 4": "4-Star Hotel",
+  "Hotel Bintang 3": "3-Star Hotel",
+  "Hotel Bintang 5": "5-Star Hotel",
+  "Transportasi AC": "AC Transport",
+  "Transport Private": "Private Transport",
+  "Guide Profesional": "Professional Guide",
+  "Guide Lokal": "Local Guide",
+  "Guide Berbahasa Indonesia": "Indonesian-Speaking Guide",
+  "Instruktur Diving": "Diving Instructor",
+  "Resort Tepi Pantai": "Beachfront Resort",
+  "Perahu Speedboat": "Speedboat",
+  "Tiket Masuk objek wisata": "Entrance Tickets",
+  "Transportasi Bus Pariwisata AC": "AC Tourism Bus",
+  "Parkir objek wisata": "Parking at Sites",
+  "Tour Leader & Local Guide": "Tour Leader & Local Guide",
+  "JR Pass 7 Hari": "7-Day JR Pass",
+  "Visa Turki": "Turkey Visa",
+  "Visa Schengen": "Schengen Visa",
+  "Desert Safari Private": "Private Desert Safari",
+  "Desert Safari": "Desert Safari",
+  "Refreshment": "Refreshment",
+};
+
+function translateDurasi(durasi: string, lang: string): string {
+  if (lang !== "en") return durasi;
+  // Convert "5H 4M" to "5D 4N" (H=Hari/Days, M=Malam/Nights)
+  return durasi.replace(/H/g, "D").replace(/M/g, "N");
+}
+function translateIncludesItem(item: string, lang: string): string {
+  if (lang !== "en") return item;
+  return includesTranslationMap[item] || item;
+}
+
 function TripCard({ item, t, language }: { item: TripItem; t: Record<string, string>; language: string }) {
   const includes = item.includes.split(",").map((s) => s.trim());
   const isFull = item.status === "Penuh";
@@ -134,7 +176,7 @@ function TripCard({ item, t, language }: { item: TripItem; t: Record<string, str
           <div className="flex flex-wrap items-center gap-3 mb-3 ml-6">
             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
               <Clock className="w-3.5 h-3.5 text-ocean" />
-              {item.durasi}
+              {translateDurasi(item.durasi, language)}
             </span>
             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
               <Calendar className="w-3.5 h-3.5 text-ocean" />
@@ -158,7 +200,7 @@ function TripCard({ item, t, language }: { item: TripItem; t: Record<string, str
                 className="inline-flex items-center gap-1 text-xs bg-gray-50 text-gray-600 px-2.5 py-1 rounded-full font-inter border border-gray-100"
               >
                 <CheckCircle className="w-3 h-3 text-green-500" />
-                {inc}
+                {translateIncludesItem(inc, language)}
               </span>
             ))}
           </div>

@@ -10,16 +10,20 @@ const heroSlides = [
     image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&q=90",
     title: "Bali Paradise",
     subtitle: "Pulau Dewata yang Memukau",
+    subtitle_en: "The Enchanting Island of the Gods",
   },
   {
     image: "https://images.unsplash.com/photo-1527838832700-5059252407fa?w=1920&q=90",
     title: "Istanbul & Cappadocia",
     subtitle: "Keajaiban Dua Benua",
+    subtitle_en: "The Wonder of Two Continents",
   },
   {
     image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=90",
     title: "Jepang Sakura",
+    title_en: "Japan Sakura",
     subtitle: "Negeri Matahari Terbit",
+    subtitle_en: "Land of the Rising Sun",
   },
 ];
 
@@ -121,8 +125,8 @@ export default function HeroSection() {
 
       {/* Current Slide Info */}
       <div className="absolute bottom-8 left-8 text-white/60">
-        <p className="text-xs font-inter">{heroSlides[activeSlide].title}</p>
-        <p className="text-xs font-inter">{heroSlides[activeSlide].subtitle}</p>
+        <p className="text-xs font-inter">{language === "en" && heroSlides[activeSlide].title_en ? heroSlides[activeSlide].title_en : heroSlides[activeSlide].title}</p>
+        <p className="text-xs font-inter">{language === "en" && heroSlides[activeSlide].subtitle_en ? heroSlides[activeSlide].subtitle_en : heroSlides[activeSlide].subtitle}</p>
       </div>
     </section>
   );

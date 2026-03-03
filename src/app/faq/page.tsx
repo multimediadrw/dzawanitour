@@ -269,12 +269,12 @@ export default function FAQPage() {
                         <HelpCircle className="w-3.5 h-3.5" />
                       </span>
                       <span className="font-semibold text-gray-800 font-poppins text-sm pr-4">
-                        {faq.question}
+                        {language === "en" && faq.question_en ? faq.question_en : faq.question}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-xs text-gray-400 font-inter bg-gray-100 px-2 py-1 rounded-full hidden sm:block">
-                        {faq.category}
+                        {language === "en" && faq.category_en ? faq.category_en : faq.category}
                       </span>
                       {openFaq === faq.id ? (
                         <ChevronUp className="w-5 h-5 text-magenta" />
@@ -287,7 +287,7 @@ export default function FAQPage() {
                     <div className="px-6 pb-5">
                       <div className="pl-9">
                         <p className="text-gray-600 font-inter text-sm leading-relaxed">
-                          {faq.answer}
+                          {language === "en" && faq.answer_en ? faq.answer_en : faq.answer}
                         </p>
                       </div>
                     </div>

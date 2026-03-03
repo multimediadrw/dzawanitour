@@ -69,12 +69,12 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
             </div>
             <div className="flex items-center gap-1 text-gray-500">
               <Clock className="w-4 h-4" />
-              <span className="text-sm font-inter">{tour.duration}</span>
+              <span className="text-sm font-inter">{language === "en" && tour.duration_en ? tour.duration_en : tour.duration}</span>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {tour.highlights.slice(0, 3).map((h) => (
+            {(language === "en" && tour.highlights_en ? tour.highlights_en : tour.highlights).slice(0, 3).map((h) => (
               <span key={h} className="text-xs bg-ocean-50 text-ocean-700 px-2 py-1 rounded-full font-inter">
                 {h}
               </span>
@@ -135,10 +135,10 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
             <span className="text-ocean text-sm font-medium font-inter">{tour.destination}</span>
           </div>
           <h3 className="text-gray-800 font-bold text-lg font-poppins mb-2">{tour.title}</h3>
-          <p className="text-gray-500 text-sm font-inter line-clamp-2 mb-3">{tour.description}</p>
+          <p className="text-gray-500 text-sm font-inter line-clamp-2 mb-3">{language === "en" && tour.description_en ? tour.description_en : tour.description}</p>
 
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {tour.includes.slice(0, 3).map((inc) => (
+            {(language === "en" && tour.includes_en ? tour.includes_en : tour.includes).slice(0, 3).map((inc) => (
               <span key={inc} className="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded-full font-inter">
                 ✓ {inc}
               </span>
@@ -154,7 +154,7 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
             </div>
             <div className="flex items-center gap-1 text-gray-500">
               <Clock className="w-4 h-4" />
-              <span className="text-sm font-inter">{tour.duration}</span>
+              <span className="text-sm font-inter">{language === "en" && tour.duration_en ? tour.duration_en : tour.duration}</span>
             </div>
           </div>
           <div className="text-right">

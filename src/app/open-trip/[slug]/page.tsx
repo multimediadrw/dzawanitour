@@ -92,7 +92,7 @@ export default function OpenTripDetailPage() {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5" />
-              <span className="font-inter">{trip.duration}</span>
+              <span className="font-inter">{lang === "en" && trip.duration_en ? trip.duration_en : trip.duration}</span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5" />
@@ -209,10 +209,10 @@ export default function OpenTripDetailPage() {
                         )}
                       </div>
                       <p className="text-gray-600 font-inter text-sm mb-3 leading-relaxed">
-                        {day.description}
+                        {lang === "en" && day.description_en ? day.description_en : day.description}
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {day.activities.map((activity, idx) => (
+                        {(lang === "en" && day.activities_en ? day.activities_en : day.activities).map((activity, idx) => (
                           <span
                             key={idx}
                             className="bg-ocean-50 text-ocean-700 text-xs px-2.5 py-1 rounded-full font-inter"
@@ -234,7 +234,7 @@ export default function OpenTripDetailPage() {
                       {lang === "en" ? "Package Includes" : "Paket Termasuk"}
                     </h3>
                     <ul className="space-y-2">
-                      {trip.included.map((item, index) => (
+                      {(lang === "en" && trip.included_en ? trip.included_en : trip.included).map((item, index) => (
                         <li key={index} className="flex items-start gap-2 text-sm">
                           <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                           <span className="text-gray-700 font-inter">{item}</span>
@@ -248,7 +248,7 @@ export default function OpenTripDetailPage() {
                       {lang === "en" ? "Package Excludes" : "Paket Tidak Termasuk"}
                     </h3>
                     <ul className="space-y-2">
-                      {trip.excluded.map((item, index) => (
+                      {(lang === "en" && trip.excluded_en ? trip.excluded_en : trip.excluded).map((item, index) => (
                         <li key={index} className="flex items-start gap-2 text-sm">
                           <XCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                           <span className="text-gray-700 font-inter">{item}</span>
@@ -265,10 +265,10 @@ export default function OpenTripDetailPage() {
                     <div key={index}>
                       <h3 className="font-bold text-gray-800 font-poppins mb-2 flex items-center gap-2">
                         <AlertCircle className="w-5 h-5 text-orange-600" />
-                        {term.title}
+                        {lang === "en" && term.title_en ? term.title_en : term.title}
                       </h3>
                       <p className="text-gray-600 font-inter text-sm leading-relaxed pl-7">
-                        {term.content}
+                        {lang === "en" && term.content_en ? term.content_en : term.content}
                       </p>
                     </div>
                   ))}
@@ -282,9 +282,9 @@ export default function OpenTripDetailPage() {
                         {trip.additional_info.map((info, index) => (
                           <div key={index} className="bg-gray-50 rounded-lg p-4">
                             <h4 className="font-semibold text-gray-800 font-poppins text-sm mb-1">
-                              {info.title}
+                              {lang === "en" && info.title_en ? info.title_en : info.title}
                             </h4>
-                            <p className="text-gray-600 font-inter text-sm">{info.content}</p>
+                            <p className="text-gray-600 font-inter text-sm">{lang === "en" && info.content_en ? info.content_en : info.content}</p>
                           </div>
                         ))}
                       </div>
@@ -330,7 +330,7 @@ export default function OpenTripDetailPage() {
                         <span className="font-semibold">
                           {lang === "en" ? "Payment Deadline:" : "Batas Pelunasan:"}
                         </span>{" "}
-                        {trip.booking.payment_deadline}
+                        {lang === "en" && trip.booking.payment_deadline_en ? trip.booking.payment_deadline_en : trip.booking.payment_deadline}
                       </p>
                     </div>
                   </div>
@@ -342,7 +342,7 @@ export default function OpenTripDetailPage() {
                         {lang === "en" ? "Important Notes" : "Catatan Penting"}
                       </h3>
                       <ul className="space-y-2">
-                        {trip.notes.map((note, index) => (
+                        {(lang === "en" && trip.notes_en ? trip.notes_en : trip.notes).map((note, index) => (
                           <li key={index} className="flex items-start gap-2 text-sm">
                             <span className="text-yellow-600 flex-shrink-0">•</span>
                             <span className="text-gray-700 font-inter">{note}</span>
@@ -377,7 +377,7 @@ export default function OpenTripDetailPage() {
                     <span className="text-gray-600 font-inter">
                       {lang === "en" ? "Duration" : "Durasi"}
                     </span>
-                    <span className="font-semibold text-gray-800 font-poppins">{trip.duration}</span>
+                    <span className="font-semibold text-gray-800 font-poppins">{lang === "en" && trip.duration_en ? trip.duration_en : trip.duration}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 font-inter">
