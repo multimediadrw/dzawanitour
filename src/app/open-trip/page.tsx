@@ -59,6 +59,12 @@ function formatDateLabel(d: Date, lang: string) {
   return `${d.getDate()} ${monthFull[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+function formatTanggalBerangkat(tanggal: string, lang: string): string {
+  const d = parseIndonesianDate(tanggal);
+  if (!d) return tanggal;
+  return formatDateLabel(d, lang);
+}
+
 // Generate 120 days starting from earliest trip date or today
 function generateDays(startDate: Date, count = 120): Date[] {
   const days: Date[] = [];
@@ -132,7 +138,7 @@ function TripCard({ item, t, language }: { item: TripItem; t: Record<string, str
             </span>
             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
               <Calendar className="w-3.5 h-3.5 text-ocean" />
-              {item.tanggalBerangkat}
+              {formatTanggalBerangkat(item.tanggalBerangkat, language)}
             </span>
             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
               <Users className="w-3.5 h-3.5 text-ocean" />
