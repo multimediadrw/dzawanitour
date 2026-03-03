@@ -4,10 +4,15 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dzawani-secret-key-2024';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
-    // Verify token
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    // Verify token - support both header and cookie auth
+    let token = request.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
+      token = request.cookies.get('admin_token')?.value;
+    }
     
     if (!token) {
       return NextResponse.json(

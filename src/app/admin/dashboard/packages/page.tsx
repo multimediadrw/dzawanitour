@@ -200,7 +200,7 @@ export default function PackagesPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      {pkg.type === 'open-trip' ? 'Open Trip' : 'Private Trip'}
+                      {pkg.type === 'open_trip' || pkg.type === 'open-trip' ? 'Open Trip' : 'Private Trip'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900 capitalize">
                       {pkg.category}
