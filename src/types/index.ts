@@ -7,7 +7,7 @@ export interface TourPackage {
   price: number;
   originalPrice?: number;
   image: string;
-  category: "domestik" | "internasional" | "umrah";
+  category: string;
   rating: number;
   reviewCount: number;
   highlights: string[];

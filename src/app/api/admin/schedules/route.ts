@@ -17,29 +17,28 @@ function verifyToken(request: NextRequest) {
   }
 }
 
-// GET - List schedules (optionally filtered by packageId)
+// GET - List schedules (optionally filtered by packageId or tripCategory)
 export async function GET(request: NextRequest) {
   try {
     verifyToken(request);
     const { searchParams } = new URL(request.url);
     const packageId = searchParams.get('packageId') || '';
+    const category = searchParams.get('category') || '';
     const status = searchParams.get('status') || '';
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
     if (packageId) where.packageId = packageId;
+    if (category) where.tripCategory = category;
     if (status) where.status = status;
 
     const schedules = await prisma.tripSchedule.findMany({
       where,
-      include: {
-        package: {
-          select: { id: true, title: true, slug: true, destination: true },
-        },
-      },
-      orderBy: { departureDate: 'asc' },
+      orderBy: { tanggalBerangkat: 'asc' },
     });
 
     return NextResponse.json({ schedules });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json(
       { message: error.message || 'Terjadi kesalahan server' },
@@ -53,35 +52,31 @@ export async function POST(request: NextRequest) {
   try {
     verifyToken(request);
     const body = await request.json();
-    const { packageId, departureDate, returnDate, price, quota, bookedCount, status, notes, notesEn } = body;
+    const { packageId, destinasi, durasi, tanggalBerangkat, harga, kuota, tersisa, status, includes, tripCategory, category, slug, hasDetail } = body;
 
-    if (!packageId || !departureDate) {
-      return NextResponse.json({ message: 'packageId dan departureDate wajib diisi' }, { status: 400 });
+    if (!packageId || !tanggalBerangkat) {
+      return NextResponse.json({ message: 'packageId dan tanggalBerangkat wajib diisi' }, { status: 400 });
     }
-
-    // Auto-compute status based on quota
-    let computedStatus = status || 'available';
-    if (bookedCount >= quota) computedStatus = 'full';
-    else if (bookedCount >= quota * 0.8) computedStatus = 'almost_full';
 
     const schedule = await prisma.tripSchedule.create({
       data: {
         packageId,
-        departureDate: new Date(departureDate),
-        returnDate: returnDate ? new Date(returnDate) : null,
-        price: price ? parseInt(price) : null,
-        quota: parseInt(quota) || 20,
-        bookedCount: parseInt(bookedCount) || 0,
-        status: computedStatus,
-        notes: notes || null,
-        notesEn: notesEn || null,
-      },
-      include: {
-        package: { select: { id: true, title: true, slug: true } },
+        destinasi: destinasi || '',
+        durasi: durasi || '',
+        tanggalBerangkat,
+        harga: parseInt(harga) || 0,
+        kuota: parseInt(kuota) || 20,
+        tersisa: parseInt(tersisa) || parseInt(kuota) || 20,
+        status: status || 'Tersedia',
+        includes: includes || '',
+        tripCategory: tripCategory || category || 'domestik',
+        slug: slug || null,
+        hasDetail: hasDetail || false,
       },
     });
 
     return NextResponse.json({ message: 'Jadwal berhasil dibuat', schedule }, { status: 201 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json(
       { message: error.message || 'Terjadi kesalahan server' },

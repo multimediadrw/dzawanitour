@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const prismaAny = prisma as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: Record<string, any> = {};
-    if (category) where.category = category;
+    if (category) where.tripCategory = category;
 
     const schedules = await prismaAny.tripSchedule.findMany({
       where,
@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
     });
 
     // Attach pricing for private trips
-    const privateSchedules = schedules.filter((s: { category: string }) =>
-      s.category.startsWith("private_")
+    const privateSchedules = schedules.filter((s: { tripCategory: string }) =>
+      s.tripCategory?.startsWith("private_")
     );
     if (privateSchedules.length > 0) {
       const packageIds = privateSchedules.map((s: { id: string }) => s.id);
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         pricingByPackage[p.packageId].push({ pax: p.pax, price: p.price });
       }
       return NextResponse.json(
-        schedules.map((s: { id: string; category: string }) => ({
+        schedules.map((s: { id: string; tripCategory: string }) => ({
           ...s,
           pricing: pricingByPackage[s.id] || [],
         }))

@@ -26,9 +26,6 @@ export async function GET(
     verifyToken(request);
     const schedule = await prisma.tripSchedule.findUnique({
       where: { id: params.id },
-      include: {
-        package: { select: { id: true, title: true, slug: true, destination: true } },
-      },
     });
     if (!schedule) {
       return NextResponse.json({ message: 'Jadwal tidak ditemukan' }, { status: 404 });
@@ -50,31 +47,23 @@ export async function PUT(
   try {
     verifyToken(request);
     const body = await request.json();
-    const { departureDate, returnDate, price, quota, bookedCount, status, notes, notesEn } = body;
-
-    const quota_ = parseInt(quota) || 20;
-    const booked_ = parseInt(bookedCount) || 0;
-
-    // Auto-compute status
-    let computedStatus = status || 'available';
-    if (booked_ >= quota_) computedStatus = 'full';
-    else if (booked_ >= quota_ * 0.8) computedStatus = 'almost_full';
+    const { destinasi, durasi, tanggalBerangkat, harga, kuota, tersisa, status, includes, tripCategory, category, slug, hasDetail } = body;
 
     const schedule = await prisma.tripSchedule.update({
       where: { id: params.id },
       data: {
-        departureDate: departureDate ? new Date(departureDate) : undefined,
-        returnDate: returnDate ? new Date(returnDate) : null,
-        price: price !== undefined ? (price ? parseInt(price) : null) : undefined,
-        quota: quota_,
-        bookedCount: booked_,
-        status: computedStatus,
-        notes: notes !== undefined ? notes : undefined,
-        notesEn: notesEn !== undefined ? notesEn : undefined,
+        destinasi: destinasi !== undefined ? destinasi : undefined,
+        durasi: durasi !== undefined ? durasi : undefined,
+        tanggalBerangkat: tanggalBerangkat !== undefined ? tanggalBerangkat : undefined,
+        harga: harga !== undefined ? parseInt(harga) : undefined,
+        kuota: kuota !== undefined ? parseInt(kuota) : undefined,
+        tersisa: tersisa !== undefined ? parseInt(tersisa) : undefined,
+        status: status !== undefined ? status : undefined,
+        includes: includes !== undefined ? includes : undefined,
+        tripCategory: (tripCategory !== undefined ? tripCategory : category) !== undefined ? (tripCategory || category) : undefined,
+        slug: slug !== undefined ? slug : undefined,
+        hasDetail: hasDetail !== undefined ? hasDetail : undefined,
         updatedAt: new Date(),
-      },
-      include: {
-        package: { select: { id: true, title: true, slug: true } },
       },
     });
 

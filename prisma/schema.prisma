@@ -191,26 +191,37 @@ model TermsCondition {
   @@index([status, order])
 }
 
+// TripSchedule: jadwal keberangkatan untuk open trip dan private trip
+// Digunakan oleh halaman open-trip, private-trip, dan admin dashboard
 model TripSchedule {
-  id              String   @id @default(uuid())
-  packageId       String
-  destinasi       String
-  durasi          String
-  tanggalBerangkat String
-  departureDate   DateTime?
-  harga           Int
-  kuota           Int
-  tersisa         Int
-  status          String   @default("Tersedia")
-  includes        String
-  category        String   @default("domestik")
-  slug            String?
-  hasDetail       Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String    @id @default(uuid())
+  packageId        String
+  // Fields untuk open trip / private trip (data.ts style)
+  destinasi        String    @default("")
+  durasi           String    @default("")
+  tanggalBerangkat String    @default("")
+  harga            Int       @default(0)
+  kuota            Int       @default(20)
+  tersisa          Int       @default(20)
+  status           String    @default("Tersedia")
+  includes         String    @default("")
+  tripCategory     String    @default("domestik")
+  slug             String?
+  hasDetail        Boolean   @default(false)
+  // Fields untuk admin dashboard schedules (TripScheduleCalendar style)
+  departureDate    DateTime?
+  returnDate       DateTime?
+  price            Int?
+  quota            Int       @default(20)
+  bookedCount      Int       @default(0)
+  notes            String?
+  notesEn          String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  @@index([category, status])
+  @@index([tripCategory, status])
   @@index([packageId])
+  @@index([departureDate])
 }
 
 model PrivateTripPricing {

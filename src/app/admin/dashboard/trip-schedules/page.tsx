@@ -13,7 +13,7 @@ interface TripSchedule {
   tersisa: number;
   status: string;
   includes: string;
-  category: string;
+  tripCategory: string;
   slug?: string | null;
   hasDetail?: boolean;
   pricing?: { pax: number; price: number }[];
@@ -51,7 +51,7 @@ const emptyForm = {
   tersisa: '20',
   status: 'Tersedia',
   includes: '',
-  category: 'domestik',
+  tripCategory: 'domestik',
   slug: '',
   hasDetail: false,
   // Private trip pricing
@@ -108,7 +108,7 @@ export default function TripSchedulesPage() {
       tersisa: String(schedule.tersisa),
       status: schedule.status,
       includes: schedule.includes,
-      category: schedule.category,
+      tripCategory: schedule.tripCategory,
       slug: schedule.slug || '',
       hasDetail: schedule.hasDetail || false,
       hargaPer2Pax: String(p2),
@@ -121,7 +121,7 @@ export default function TripSchedulesPage() {
 
   const handleNew = () => {
     setEditingId(null);
-    setForm({ ...emptyForm, category: activeCategory });
+    setForm({ ...emptyForm, tripCategory: activeCategory });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -140,7 +140,7 @@ export default function TripSchedulesPage() {
     setSaving(true);
     setMessage('');
     try {
-      const isPrivateCategory = form.category.startsWith('private_');
+      const isPrivateCategory = form.tripCategory.startsWith('private_');
       const body = {
         destinasi: form.destinasi,
         durasi: form.durasi || 'Fleksibel',
@@ -150,7 +150,7 @@ export default function TripSchedulesPage() {
         tersisa: Number(form.tersisa) || 20,
         status: form.status,
         includes: form.includes,
-        category: form.category,
+        tripCategory: form.tripCategory,
         slug: form.slug || null,
         hasDetail: form.hasDetail,
         ...(isPrivateCategory && {
@@ -247,8 +247,8 @@ export default function TripSchedulesPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
               <select
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                value={form.tripCategory}
+                onChange={(e) => setForm({ ...form, tripCategory: e.target.value })}
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-magenta/30"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
@@ -288,7 +288,7 @@ export default function TripSchedulesPage() {
             </div>
 
             {/* Open trip fields */}
-            {!form.category.startsWith('private_') && (
+            {!form.tripCategory.startsWith('private_') && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Harga /pax (Rp)</label>
@@ -322,7 +322,7 @@ export default function TripSchedulesPage() {
             )}
 
             {/* Private trip pricing */}
-            {form.category.startsWith('private_') && (
+            {form.tripCategory.startsWith('private_') && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Harga /2 Pax (Rp)</label>
@@ -379,7 +379,7 @@ export default function TripSchedulesPage() {
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-magenta/30"
               />
             </div>
-            {!form.category.startsWith('private_') && (
+            {!form.tripCategory.startsWith('private_') && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Slug (untuk halaman detail)</label>

@@ -12,37 +12,38 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: 'packageId atau slug wajib diisi' }, { status: 400 });
     }
 
-    let pkg = null;
-    if (slug) {
-      pkg = await prisma.tourPackage.findUnique({
+    let resolvedPackageId = packageId;
+    if (slug && !packageId) {
+      const pkg = await prisma.tourPackage.findUnique({
         where: { slug },
         select: { id: true },
       });
       if (!pkg) {
         return NextResponse.json({ schedules: [] });
       }
+      resolvedPackageId = pkg.id;
     }
-
-    const resolvedPackageId = packageId || pkg?.id;
 
     const schedules = await prisma.tripSchedule.findMany({
       where: {
         packageId: resolvedPackageId,
-        status: { not: 'cancelled' },
-        departureDate: { gte: new Date() }, // Only future dates
+        status: { not: 'Penuh' },
       },
       select: {
         id: true,
+        tanggalBerangkat: true,
         departureDate: true,
-        returnDate: true,
-        price: true,
-        quota: true,
-        bookedCount: true,
+        harga: true,
+        kuota: true,
+        tersisa: true,
         status: true,
-        notes: true,
-        notesEn: true,
+        includes: true,
+        durasi: true,
+        destinasi: true,
+        slug: true,
+        hasDetail: true,
       },
-      orderBy: { departureDate: 'asc' },
+      orderBy: { tanggalBerangkat: 'asc' },
     });
 
     return NextResponse.json({ schedules });

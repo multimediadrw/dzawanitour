@@ -1,53 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET - All future schedules for open-trip packages, optionally filtered by category
+// GET - All schedules for open-trip packages, optionally filtered by tripCategory
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category') || ''; // 'domestic' | 'international'
+    const category = searchParams.get('category') || '';
 
-    const wherePackage: any = {
-      type: 'open-trip',
-    };
-    if (category === 'domestic') {
-      wherePackage.category = 'domestic';
-    } else if (category === 'international') {
-      wherePackage.category = 'international';
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = {};
+    if (category) where.tripCategory = category;
 
     const schedules = await prisma.tripSchedule.findMany({
-      where: {
-        status: { not: 'cancelled' },
-        departureDate: { gte: new Date() },
-        package: wherePackage,
-      },
+      where,
       select: {
         id: true,
-        departureDate: true,
-        returnDate: true,
-        price: true,
-        quota: true,
-        bookedCount: true,
+        packageId: true,
+        destinasi: true,
+        durasi: true,
+        tanggalBerangkat: true,
+        harga: true,
+        kuota: true,
+        tersisa: true,
         status: true,
-        notes: true,
-        package: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            destination: true,
-            duration: true,
-            price: true,
-            includes: true,
-            category: true,
-          },
-        },
+        includes: true,
+        tripCategory: true,
+        slug: true,
+        hasDetail: true,
       },
-      orderBy: { departureDate: 'asc' },
+      orderBy: { tanggalBerangkat: 'asc' },
     });
 
     return NextResponse.json({ schedules });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('GET all schedules error:', error);
     return NextResponse.json(

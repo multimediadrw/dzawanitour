@@ -10,19 +10,11 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prismaAny = prisma as any;
 
-    // Build where clause
+    // Build where clause using tripCategory field
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: Record<string, any> = {};
-    if (category === "domestik") {
-      where.category = "domestik";
-    } else if (category === "internasional") {
-      where.category = "internasional";
-    } else if (category === "private_domestik") {
-      where.category = "private_domestik";
-    } else if (category === "private_internasional") {
-      where.category = "private_internasional";
-    } else if (category) {
-      where.category = category;
+    if (category) {
+      where.tripCategory = category;
     }
 
     const schedules = await prismaAny.tripSchedule.findMany({
@@ -32,8 +24,8 @@ export async function GET(request: NextRequest) {
 
     // For private trips, also fetch pricing
     if (category.startsWith("private_") || !category) {
-      const privateSchedules = schedules.filter((s: { category: string }) =>
-        s.category.startsWith("private_")
+      const privateSchedules = schedules.filter((s: { tripCategory: string }) =>
+        s.tripCategory?.startsWith("private_")
       );
       if (privateSchedules.length > 0) {
         const packageIds = privateSchedules.map((s: { id: string }) => s.id);
@@ -48,7 +40,7 @@ export async function GET(request: NextRequest) {
           pricingByPackage[p.packageId].push({ pax: p.pax, price: p.price });
         }
         return NextResponse.json(
-          schedules.map((s: { id: string; category: string }) => ({
+          schedules.map((s: { id: string; tripCategory: string }) => ({
             ...s,
             pricing: pricingByPackage[s.id] || [],
           }))
