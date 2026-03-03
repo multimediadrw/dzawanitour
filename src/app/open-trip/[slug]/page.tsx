@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getOpenTripBySlug } from "@/lib/open-trip-detail-data";
 import TripScheduleCalendar from "@/components/trip/TripScheduleCalendar";
+import { useLanguage } from "@/i18n/LanguageContext";
 import {
   MapPin,
   Calendar,
@@ -31,11 +32,12 @@ function formatRupiah(amount: number) {
 
 export default function OpenTripDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const slug = params.slug as string;
   const [activeTab, setActiveTab] = useState<"itinerary" | "includes" | "terms" | "booking">(
     "itinerary"
   );
+  const { language } = useLanguage();
+  const lang = language;
 
   const trip = getOpenTripBySlug(slug);
 
@@ -45,11 +47,11 @@ export default function OpenTripDetailPage() {
         <Navbar />
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-2xl font-bold text-gray-800 font-poppins mb-4">
-            Paket Tidak Ditemukan
+            {lang === "en" ? "Package Not Found" : "Paket Tidak Ditemukan"}
           </h1>
           <Link href="/open-trip" className="btn-primary inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Kembali ke Open Trip
+            {lang === "en" ? "Back to Open Trip" : "Kembali ke Open Trip"}
           </Link>
         </div>
         <Footer />
@@ -70,7 +72,7 @@ export default function OpenTripDetailPage() {
             className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 text-sm font-inter"
           >
             <ArrowLeft className="w-4 h-4" />
-            Kembali ke Open Trip
+            {lang === "en" ? "Back to Open Trip" : "Kembali ke Open Trip"}
           </Link>
 
           {trip.badge && (
@@ -94,17 +96,23 @@ export default function OpenTripDetailPage() {
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5" />
-              <span className="font-inter">Min. {trip.booking.min_participants} orang</span>
+              <span className="font-inter">
+                Min. {trip.booking.min_participants} {lang === "en" ? "people" : "orang"}
+              </span>
             </div>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
-              <p className="text-white/70 text-xs font-inter">Mulai dari</p>
+              <p className="text-white/70 text-xs font-inter">
+                {lang === "en" ? "Starting from" : "Mulai dari"}
+              </p>
               <p className="text-white font-bold text-2xl font-poppins">
                 {formatRupiah(trip.price.low_season.full)}
               </p>
-              <p className="text-white/70 text-xs font-inter">per orang</p>
+              <p className="text-white/70 text-xs font-inter">
+                {lang === "en" ? "per person" : "per orang"}
+              </p>
             </div>
           </div>
         </div>
@@ -118,7 +126,7 @@ export default function OpenTripDetailPage() {
             {/* Highlights */}
             <div className="card mb-6">
               <h2 className="text-2xl font-bold text-gray-800 font-poppins mb-4">
-                Highlights Perjalanan
+                {lang === "en" ? "Trip Highlights" : "Highlights Perjalanan"}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {trip.highlights.map((highlight, index) => (
@@ -162,7 +170,7 @@ export default function OpenTripDetailPage() {
                         : "border-transparent text-gray-500 hover:text-gray-700"
                     }`}
                   >
-                    Syarat & Ketentuan
+                    {lang === "en" ? "Terms & Conditions" : "Syarat & Ketentuan"}
                   </button>
                   <button
                     onClick={() => setActiveTab("booking")}
@@ -172,7 +180,7 @@ export default function OpenTripDetailPage() {
                         : "border-transparent text-gray-500 hover:text-gray-700"
                     }`}
                   >
-                    Info Booking
+                    {lang === "en" ? "Booking Info" : "Info Booking"}
                   </button>
                 </div>
               </div>
@@ -223,7 +231,7 @@ export default function OpenTripDetailPage() {
                   <div>
                     <h3 className="font-bold text-gray-800 font-poppins mb-4 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600" />
-                      Paket Termasuk
+                      {lang === "en" ? "Package Includes" : "Paket Termasuk"}
                     </h3>
                     <ul className="space-y-2">
                       {trip.included.map((item, index) => (
@@ -237,7 +245,7 @@ export default function OpenTripDetailPage() {
                   <div>
                     <h3 className="font-bold text-gray-800 font-poppins mb-4 flex items-center gap-2">
                       <XCircle className="w-5 h-5 text-red-600" />
-                      Paket Tidak Termasuk
+                      {lang === "en" ? "Package Excludes" : "Paket Tidak Termasuk"}
                     </h3>
                     <ul className="space-y-2">
                       {trip.excluded.map((item, index) => (
@@ -268,7 +276,7 @@ export default function OpenTripDetailPage() {
                   {trip.additional_info.length > 0 && (
                     <div className="mt-8 pt-6 border-t border-gray-200">
                       <h3 className="font-bold text-gray-800 font-poppins mb-4">
-                        Informasi Tambahan
+                        {lang === "en" ? "Additional Information" : "Informasi Tambahan"}
                       </h3>
                       <div className="space-y-3">
                         {trip.additional_info.map((info, index) => (
@@ -289,7 +297,7 @@ export default function OpenTripDetailPage() {
                 <div className="space-y-6">
                   <div className="bg-ocean-50 border border-ocean/20 rounded-xl p-6">
                     <h3 className="font-bold text-gray-800 font-poppins mb-4">
-                      Informasi Harga & Pembayaran
+                      {lang === "en" ? "Price & Payment Information" : "Informasi Harga & Pembayaran"}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="bg-white rounded-lg p-4">
@@ -313,11 +321,15 @@ export default function OpenTripDetailPage() {
                     </div>
                     <div className="space-y-2 text-sm">
                       <p className="text-gray-700 font-inter">
-                        <span className="font-semibold">Minimal Peserta:</span>{" "}
-                        {trip.booking.min_participants} orang
+                        <span className="font-semibold">
+                          {lang === "en" ? "Minimum Participants:" : "Minimal Peserta:"}
+                        </span>{" "}
+                        {trip.booking.min_participants} {lang === "en" ? "people" : "orang"}
                       </p>
                       <p className="text-gray-700 font-inter">
-                        <span className="font-semibold">Batas Pelunasan:</span>{" "}
+                        <span className="font-semibold">
+                          {lang === "en" ? "Payment Deadline:" : "Batas Pelunasan:"}
+                        </span>{" "}
                         {trip.booking.payment_deadline}
                       </p>
                     </div>
@@ -327,7 +339,7 @@ export default function OpenTripDetailPage() {
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                       <h3 className="font-bold text-gray-800 font-poppins mb-3 flex items-center gap-2">
                         <AlertCircle className="w-5 h-5 text-yellow-600" />
-                        Catatan Penting
+                        {lang === "en" ? "Important Notes" : "Catatan Penting"}
                       </h3>
                       <ul className="space-y-2">
                         {trip.notes.map((note, index) => (
@@ -350,44 +362,60 @@ export default function OpenTripDetailPage() {
               {/* Price Card */}
               <div className="card">
                 <div className="bg-gradient-to-br from-ocean to-purple rounded-xl p-5 mb-4 text-white">
-                  <p className="text-white/80 text-xs font-inter mb-1">Harga Mulai Dari</p>
+                  <p className="text-white/80 text-xs font-inter mb-1">
+                    {lang === "en" ? "Starting Price" : "Harga Mulai Dari"}
+                  </p>
                   <p className="text-3xl font-bold font-poppins">
                     {formatRupiah(trip.price.low_season.full)}
                   </p>
-                  <p className="text-white/80 text-sm font-inter mt-1">per orang</p>
+                  <p className="text-white/80 text-sm font-inter mt-1">
+                    {lang === "en" ? "per person" : "per orang"}
+                  </p>
                 </div>
                 <div className="space-y-2.5 mb-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 font-inter">Durasi</span>
+                    <span className="text-gray-600 font-inter">
+                      {lang === "en" ? "Duration" : "Durasi"}
+                    </span>
                     <span className="font-semibold text-gray-800 font-poppins">{trip.duration}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 font-inter">Minimal Peserta</span>
+                    <span className="text-gray-600 font-inter">
+                      {lang === "en" ? "Min. Participants" : "Minimal Peserta"}
+                    </span>
                     <span className="font-semibold text-gray-800 font-poppins">
-                      {trip.booking.min_participants} orang
+                      {trip.booking.min_participants} {lang === "en" ? "people" : "orang"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 font-inter">Kategori</span>
+                    <span className="text-gray-600 font-inter">
+                      {lang === "en" ? "Category" : "Kategori"}
+                    </span>
                     <span className="font-semibold text-gray-800 font-poppins">
-                      {trip.category === "international" ? "Internasional" : "Domestik"}
+                      {trip.category === "international"
+                        ? (lang === "en" ? "International" : "Internasional")
+                        : (lang === "en" ? "Domestic" : "Domestik")}
                     </span>
                   </div>
                 </div>
                 <a
-                  href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya ingin tanya paket ${trip.title}. Mohon info lebih lanjut.`}
+                  href={`https://wa.me/628112222254?text=${encodeURIComponent(
+                    lang === "en"
+                      ? `Hello Dzawani Tour, I would like to ask about the ${trip.title} package. Please provide more information.`
+                      : `Halo Dzawani Tour, saya ingin tanya paket ${trip.title}. Mohon info lebih lanjut.`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-secondary w-full flex items-center justify-center gap-2 mb-2"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Konsultasi via WhatsApp
+                  {lang === "en" ? "Consult via WhatsApp" : "Konsultasi via WhatsApp"}
                 </a>
                 <Link
                   href="/open-trip"
                   className="text-center block text-sm text-gray-500 hover:text-magenta font-inter transition-colors"
                 >
-                  Lihat Paket Lainnya
+                  {lang === "en" ? "View Other Packages" : "Lihat Paket Lainnya"}
                 </Link>
               </div>
 
@@ -397,7 +425,7 @@ export default function OpenTripDetailPage() {
                 packageTitle={trip.title}
                 basePrice={trip.price.low_season.full}
                 whatsappNumber="628112222254"
-                language="id"
+                language={lang}
               />
             </div>
           </div>

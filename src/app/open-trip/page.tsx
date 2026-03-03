@@ -109,7 +109,7 @@ function StatusBadge({ status, t }: { status: string; t: { available: string; al
   );
 }
 
-function TripCard({ item, t }: { item: TripItem; t: Record<string, string> }) {
+function TripCard({ item, t, language }: { item: TripItem; t: Record<string, string>; language: string }) {
   const includes = item.includes.split(",").map((s) => s.trim());
   const isFull = item.status === "Penuh";
 
@@ -136,7 +136,7 @@ function TripCard({ item, t }: { item: TripItem; t: Record<string, string> }) {
             </span>
             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-inter">
               <Users className="w-3.5 h-3.5 text-ocean" />
-              {item.tersisa}/{item.kuota} kursi
+              {item.tersisa}/{item.kuota} {t.seatsLeft}
             </span>
           </div>
 
@@ -177,9 +177,11 @@ function TripCard({ item, t }: { item: TripItem; t: Record<string, string> }) {
             <p className="text-xs text-gray-400 font-inter">/pax</p>
           </div>
 
-          <a
+            <a
             href={`https://wa.me/628112222254?text=${encodeURIComponent(
-              `Halo Dzawani Tour, saya ingin booking Open Trip *${item.destinasi}*.\n\nTanggal Keberangkatan: ${item.tanggalBerangkat}\nHarga: ${formatRupiah(item.harga)}/pax\n\nMohon info lebih lanjut.`
+              language === "en"
+                ? `Hello Dzawani Tour, I would like to book the Open Trip *${item.destinasi}*.\n\nDeparture Date: ${item.tanggalBerangkat}\nPrice: ${formatRupiah(item.harga)}/pax\n\nPlease provide more information.`
+                : `Halo Dzawani Tour, saya ingin booking Open Trip *${item.destinasi}*.\n\nTanggal Keberangkatan: ${item.tanggalBerangkat}\nHarga: ${formatRupiah(item.harga)}/pax\n\nMohon info lebih lanjut.`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -476,7 +478,7 @@ function OpenTripContent() {
               </p>
 
               {selectedTrips.map((item) => (
-                <TripCard key={item.id} item={item} t={ot as unknown as Record<string, string>} />
+                <TripCard key={item.id} item={item} t={ot as unknown as Record<string, string>} language={language} />
               ))}
             </div>
           )}

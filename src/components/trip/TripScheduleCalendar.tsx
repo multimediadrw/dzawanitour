@@ -47,6 +47,15 @@ function formatDateID(dateStr: string) {
   return `${d.getDate()} ${MONTH_NAMES_ID[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+function formatDateEN(dateStr: string) {
+  const d = new Date(dateStr);
+  return `${d.getDate()} ${MONTH_NAMES_EN[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function formatDate(dateStr: string, lang: string) {
+  return lang === "en" ? formatDateEN(dateStr) : formatDateID(dateStr);
+}
+
 function getStatusConfig(status: string, lang: string) {
   switch (status) {
     case "available":
@@ -166,12 +175,19 @@ export default function TripScheduleCalendar({
   };
 
   const handleBooking = (schedule: TripSchedule) => {
-    const dateStr = formatDateID(schedule.departureDate);
+    const dateStr = formatDate(schedule.departureDate, lang);
     const price = schedule.price || basePrice;
-    const text = encodeURIComponent(
-      `Halo Dzawani Tour, saya ingin booking paket *${packageTitle}*.\n\nTanggal Keberangkatan: ${dateStr}\nHarga: ${formatRupiah(price)}/pax\n\nMohon info lebih lanjut.`
-    );
-    window.open(`https://wa.me/${whatsappNumber}?text=${text}`, "_blank");
+    let text: string;
+    if (lang === "en") {
+      text = encodeURIComponent(
+        `Hello Dzawani Tour, I would like to book the *${packageTitle}* package.\n\nDeparture Date: ${dateStr}\nPrice: ${formatRupiah(price)}/pax\n\nPlease provide more information.`
+      );
+    } else {
+      text = encodeURIComponent(
+        `Halo Dzawani Tour, saya ingin booking paket *${packageTitle}*.\n\nTanggal Keberangkatan: ${dateStr}\nHarga: ${formatRupiah(price)}/pax\n\nMohon info lebih lanjut.`
+      );
+    }
+     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, "_blank");
   };
 
   if (loading) {
@@ -212,7 +228,7 @@ export default function TripScheduleCalendar({
               : "Belum ada jadwal tersedia. Hubungi kami untuk tanggal custom."}
           </p>
           <a
-            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Halo Dzawani Tour, saya ingin tanya jadwal keberangkatan untuk paket ${packageTitle}.`)}`}
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lang === "en" ? `Hello Dzawani Tour, I would like to ask about the departure schedule for the ${packageTitle} package.` : `Halo Dzawani Tour, saya ingin tanya jadwal keberangkatan untuk paket ${packageTitle}.`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 bg-magenta text-white px-5 py-2.5 rounded-full text-sm font-semibold font-poppins hover:bg-magenta/90 transition-colors"
@@ -370,9 +386,9 @@ export default function TripScheduleCalendar({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-gray-800 font-poppins text-sm">
-                        {formatDateID(schedule.departureDate)}
+                        {formatDate(schedule.departureDate, lang)}
                         {schedule.returnDate && (
-                          <span className="text-gray-400 font-normal"> — {formatDateID(schedule.returnDate)}</span>
+                          <span className="text-gray-400 font-normal"> — {formatDate(schedule.returnDate, lang)}</span>
                         )}
                       </p>
                       <div className="flex items-center gap-3 mt-1">
@@ -413,11 +429,11 @@ export default function TripScheduleCalendar({
                   {lang === "en" ? "Selected Departure" : "Keberangkatan Dipilih"}
                 </p>
                 <p className="font-bold text-gray-800 font-poppins">
-                  {formatDateID(selectedSchedule.departureDate)}
+                  {formatDate(selectedSchedule.departureDate, lang)}
                 </p>
                 {selectedSchedule.returnDate && (
                   <p className="text-xs text-gray-500 font-inter">
-                    {lang === "en" ? "Return:" : "Kembali:"} {formatDateID(selectedSchedule.returnDate)}
+                    {lang === "en" ? "Return:" : "Kembali:"} {formatDate(selectedSchedule.returnDate, lang)}
                   </p>
                 )}
               </div>

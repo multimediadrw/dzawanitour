@@ -32,8 +32,11 @@ interface TripDatePickerSectionProps {
 }
 
 const DAY_NAMES_ID = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+const DAY_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTH_NAMES_ID = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+const MONTH_NAMES_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const MONTH_FULL_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const MONTH_FULL_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
@@ -43,14 +46,32 @@ function toDateKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
-function getStatusConfig(status: string) {
+function getStatusConfig(status: string, lang: string) {
   switch (status) {
     case "available":
-      return { label: "Tersedia", color: "text-green-600", bg: "bg-green-50 border-green-200", dot: "bg-green-500", icon: <CheckCircle className="w-3.5 h-3.5" /> };
+      return {
+        label: lang === "en" ? "Available" : "Tersedia",
+        color: "text-green-600",
+        bg: "bg-green-50 border-green-200",
+        dot: "bg-green-500",
+        icon: <CheckCircle className="w-3.5 h-3.5" />
+      };
     case "almost_full":
-      return { label: "Hampir Penuh", color: "text-orange-600", bg: "bg-orange-50 border-orange-200", dot: "bg-orange-500", icon: <AlertCircle className="w-3.5 h-3.5" /> };
+      return {
+        label: lang === "en" ? "Almost Full" : "Hampir Penuh",
+        color: "text-orange-600",
+        bg: "bg-orange-50 border-orange-200",
+        dot: "bg-orange-500",
+        icon: <AlertCircle className="w-3.5 h-3.5" />
+      };
     case "full":
-      return { label: "Penuh", color: "text-red-600", bg: "bg-red-50 border-red-200", dot: "bg-red-500", icon: <XCircle className="w-3.5 h-3.5" /> };
+      return {
+        label: lang === "en" ? "Full" : "Penuh",
+        color: "text-red-600",
+        bg: "bg-red-50 border-red-200",
+        dot: "bg-red-500",
+        icon: <XCircle className="w-3.5 h-3.5" />
+      };
     default:
       return { label: status, color: "text-gray-600", bg: "bg-gray-50 border-gray-200", dot: "bg-gray-400", icon: null };
   }
@@ -84,6 +105,11 @@ export default function TripDatePickerSection({
   const scrollRef = useRef<HTMLDivElement>(null);
   const days = generateDays(60);
 
+  const lang = language;
+  const DAY_NAMES = lang === "en" ? DAY_NAMES_EN : DAY_NAMES_ID;
+  const MONTH_NAMES = lang === "en" ? MONTH_NAMES_EN : MONTH_NAMES_ID;
+  const MONTH_FULL = lang === "en" ? MONTH_FULL_EN : MONTH_FULL_ID;
+
   // Map of dateKey -> schedules
   const schedulesByDate: Record<string, TripSchedule[]> = {};
   allSchedules.forEach((s) => {
@@ -111,7 +137,6 @@ export default function TripDatePickerSection({
   const fetchAllSchedules = async () => {
     setLoading(true);
     try {
-      // Fetch all schedules for open-trip packages of this category
       const res = await fetch(`/api/public/schedules/all?category=${category === "domestik" ? "domestic" : "international"}`);
       if (res.ok) {
         const data = await res.json();
@@ -167,7 +192,9 @@ export default function TripDatePickerSection({
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-magenta" />
-          <h3 className="font-bold text-gray-800 font-poppins">Tiket yang Tersedia</h3>
+          <h3 className="font-bold text-gray-800 font-poppins">
+            {lang === "en" ? "Available Tickets" : "Tiket yang Tersedia"}
+          </h3>
         </div>
         <div className="animate-pulse">
           <div className="flex gap-2 mb-4">
@@ -189,6 +216,17 @@ export default function TripDatePickerSection({
     return null; // Fallback to existing table if no schedules in DB
   }
 
+  // Build WhatsApp booking message based on language
+  const buildWaMessage = (pkg: TripSchedule["package"], price: number, date: string) => {
+    const d = new Date(date + "T00:00:00");
+    const dateStr = `${d.getDate()} ${MONTH_FULL[d.getMonth()]} ${d.getFullYear()}`;
+    const pkgName = pkg?.title || pkg?.destination || (lang === "en" ? "Open Trip Package" : "Paket Open Trip");
+    if (lang === "en") {
+      return `Hello Dzawani Tour, I would like to book the *${pkgName}* package.\n\nDeparture Date: ${dateStr}\n${price > 0 ? `Price: ${formatRupiah(price)}/pax\n` : ""}Please provide more information.`;
+    }
+    return `Halo Dzawani Tour, saya ingin booking paket *${pkgName}*.\n\nTanggal Keberangkatan: ${dateStr}\n${price > 0 ? `Harga: ${formatRupiah(price)}/pax\n` : ""}Mohon info lebih lanjut.`;
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8">
       {/* Header */}
@@ -196,10 +234,10 @@ export default function TripDatePickerSection({
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-magenta" />
           <h3 className="font-bold text-gray-800 font-poppins">
-            {language === "en" ? "Available Tickets" : "Tiket yang Tersedia"}
+            {lang === "en" ? "Available Tickets" : "Tiket yang Tersedia"}
           </h3>
           <span className="bg-magenta/10 text-magenta text-xs font-bold px-2 py-0.5 rounded-full font-poppins">
-            {allSchedules.length} jadwal
+            {allSchedules.length} {lang === "en" ? "schedules" : "jadwal"}
           </span>
         </div>
       </div>
@@ -216,7 +254,7 @@ export default function TripDatePickerSection({
               }`}
             >
               <Calendar className="w-4 h-4" />
-              <span className="hidden sm:inline">Lihat Kalender</span>
+              <span className="hidden sm:inline">{lang === "en" ? "View Calendar" : "Lihat Kalender"}</span>
             </button>
 
             {/* Calendar Dropdown */}
@@ -233,7 +271,7 @@ export default function TripDatePickerSection({
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <span className="font-bold text-gray-800 font-poppins text-sm">
-                    {MONTH_FULL_ID[calendarMonth]} {calendarYear}
+                    {MONTH_FULL[calendarMonth]} {calendarYear}
                   </span>
                   <button
                     onClick={() => {
@@ -246,7 +284,7 @@ export default function TripDatePickerSection({
                   </button>
                 </div>
                 <div className="grid grid-cols-7 gap-0.5 mb-1">
-                  {DAY_NAMES_ID.map(d => (
+                  {DAY_NAMES.map(d => (
                     <div key={d} className="text-center text-xs text-gray-400 font-inter py-1">{d}</div>
                   ))}
                 </div>
@@ -296,7 +334,6 @@ export default function TripDatePickerSection({
               const key = toDateKey(day);
               const hasSchedule = availableDates.has(key);
               const isSelected = selectedDate === key;
-              const isToday = key === toDateKey(new Date());
               const schedCount = schedulesByDate[key]?.length || 0;
 
               return (
@@ -313,13 +350,13 @@ export default function TripDatePickerSection({
                   }`}
                 >
                   <span className={`text-xs font-inter ${isSelected ? "text-white/80" : "text-gray-400"}`}>
-                    {DAY_NAMES_ID[day.getDay()]}
+                    {DAY_NAMES[day.getDay()]}
                   </span>
                   <span className={`text-sm font-bold font-poppins ${isSelected ? "text-white" : hasSchedule ? "text-gray-800" : "text-gray-300"}`}>
                     {day.getDate()}
                   </span>
                   <span className={`text-xs font-inter ${isSelected ? "text-white/80" : "text-gray-400"}`}>
-                    {MONTH_NAMES_ID[day.getMonth()]}
+                    {MONTH_NAMES[day.getMonth()]}
                   </span>
                   {hasSchedule && !isSelected && (
                     <span className="w-1.5 h-1.5 bg-magenta rounded-full mt-0.5" />
@@ -344,31 +381,39 @@ export default function TripDatePickerSection({
         {!selectedDate ? (
           <div className="text-center py-10 text-gray-400">
             <Calendar className="w-10 h-10 mx-auto mb-2 text-gray-200" />
-            <p className="font-inter text-sm">Pilih tanggal untuk melihat jadwal yang tersedia</p>
+            <p className="font-inter text-sm">
+              {lang === "en" ? "Select a date to view available schedules" : "Pilih tanggal untuk melihat jadwal yang tersedia"}
+            </p>
           </div>
         ) : selectedSchedules.length === 0 ? (
           <div className="text-center py-10 text-gray-400">
             <Calendar className="w-10 h-10 mx-auto mb-2 text-gray-200" />
             <p className="font-inter text-sm font-semibold text-gray-600 mb-1">
-              Tidak ada jadwal pada tanggal ini
+              {lang === "en" ? "No trips on this date" : "Tidak ada jadwal pada tanggal ini"}
             </p>
-            <p className="font-inter text-xs text-gray-400">Pilih tanggal lain yang memiliki titik merah</p>
+            <p className="font-inter text-xs text-gray-400">
+              {lang === "en" ? "Select a date with a pink dot" : "Pilih tanggal lain yang memiliki titik merah"}
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
             {/* Selected date label */}
             <p className="text-sm text-gray-500 font-inter">
-              Menampilkan <span className="font-semibold text-gray-800">{selectedSchedules.length} paket</span> untuk keberangkatan{" "}
+              {lang === "en" ? "Showing" : "Menampilkan"}{" "}
+              <span className="font-semibold text-gray-800">
+                {selectedSchedules.length} {lang === "en" ? "packages" : "paket"}
+              </span>{" "}
+              {lang === "en" ? "for departure on" : "untuk keberangkatan"}{" "}
               <span className="font-semibold text-magenta">
-                {DAY_NAMES_ID[new Date(selectedDate + "T00:00:00").getDay()]},{" "}
+                {DAY_NAMES[new Date(selectedDate + "T00:00:00").getDay()]},{" "}
                 {new Date(selectedDate + "T00:00:00").getDate()}{" "}
-                {MONTH_FULL_ID[new Date(selectedDate + "T00:00:00").getMonth()]}{" "}
+                {MONTH_FULL[new Date(selectedDate + "T00:00:00").getMonth()]}{" "}
                 {new Date(selectedDate + "T00:00:00").getFullYear()}
               </span>
             </p>
 
             {selectedSchedules.map((schedule) => {
-              const statusCfg = getStatusConfig(schedule.status);
+              const statusCfg = getStatusConfig(schedule.status, lang);
               const price = schedule.price || schedule.package?.price || 0;
               const remaining = schedule.quota - schedule.bookedCount;
               const pkg = schedule.package;
@@ -384,7 +429,7 @@ export default function TripDatePickerSection({
                       <div className="flex items-center gap-2 mb-1">
                         <MapPin className="w-4 h-4 text-magenta flex-shrink-0" />
                         <h4 className="font-bold text-gray-800 font-poppins text-base truncate">
-                          {pkg?.title || pkg?.destination || "Paket Open Trip"}
+                          {pkg?.title || pkg?.destination || (lang === "en" ? "Open Trip Package" : "Paket Open Trip")}
                         </h4>
                       </div>
 
@@ -411,7 +456,7 @@ export default function TripDatePickerSection({
                         {/* Quota */}
                         <span className="inline-flex items-center gap-1 text-xs text-gray-500 font-inter">
                           <Users className="w-3.5 h-3.5" />
-                          {remaining}/{schedule.quota} kursi tersisa
+                          {remaining}/{schedule.quota} {lang === "en" ? "seats left" : "kursi tersisa"}
                         </span>
 
                         {/* Duration */}
@@ -441,7 +486,7 @@ export default function TripDatePickerSection({
                           href={`/open-trip/${pkg.slug}`}
                           className="inline-block mt-3 ml-6 text-sm text-ocean font-semibold font-inter hover:underline"
                         >
-                          Lihat Detail →
+                          {lang === "en" ? "View Details →" : "Lihat Detail →"}
                         </Link>
                       )}
                     </div>
@@ -450,7 +495,7 @@ export default function TripDatePickerSection({
                     <div className="flex flex-col items-end gap-3 flex-shrink-0">
                       <div className="text-right">
                         <p className="text-2xl font-bold text-magenta font-poppins">
-                          {price > 0 ? formatRupiah(price) : "Hubungi Kami"}
+                          {price > 0 ? formatRupiah(price) : (lang === "en" ? "Contact Us" : "Hubungi Kami")}
                         </p>
                         {price > 0 && (
                           <p className="text-xs text-gray-400 font-inter">/pax</p>
@@ -459,7 +504,7 @@ export default function TripDatePickerSection({
 
                       <a
                         href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                          `Halo Dzawani Tour, saya ingin booking paket *${pkg?.title || pkg?.destination || "Open Trip"}*.\n\nTanggal Keberangkatan: ${new Date(selectedDate + "T00:00:00").getDate()} ${MONTH_FULL_ID[new Date(selectedDate + "T00:00:00").getMonth()]} ${new Date(selectedDate + "T00:00:00").getFullYear()}\n${price > 0 ? `Harga: ${formatRupiah(price)}/pax\n` : ""}Mohon info lebih lanjut.`
+                          buildWaMessage(pkg, price, selectedDate)
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -470,7 +515,9 @@ export default function TripDatePickerSection({
                         }`}
                       >
                         <MessageCircle className="w-4 h-4" />
-                        {schedule.status === "full" ? "Penuh" : "Pilih Tiket"}
+                        {schedule.status === "full"
+                          ? (lang === "en" ? "Full" : "Penuh")
+                          : (lang === "en" ? "Book Now" : "Pilih Tiket")}
                       </a>
                     </div>
                   </div>

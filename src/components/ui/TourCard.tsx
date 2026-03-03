@@ -1,8 +1,9 @@
+"use client";
 import Image from "next/image";
-import Link from "next/link";
 import { Star, Clock, MapPin, ArrowRight } from "lucide-react";
 import { TourPackage } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface TourCardProps {
   tour: TourPackage;
@@ -10,6 +11,8 @@ interface TourCardProps {
 }
 
 export default function TourCard({ tour, variant = "default" }: TourCardProps) {
+  const { language } = useLanguage();
+
   const badgeColors: Record<string, string> = {
     "Best Seller": "bg-magenta text-white",
     "Hot Deal": "bg-sunset text-white",
@@ -18,6 +21,13 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
     "Seasonal Special": "bg-mint text-white",
     "Terpercaya": "bg-green-600 text-white",
   };
+
+  const reviewsLabel = language === "en" ? "reviews" : "ulasan";
+  const perPersonLabel = language === "en" ? "/person" : "/orang";
+  const bookLabel = language === "en" ? "Book" : "Pesan";
+  const waText = language === "en"
+    ? `Hello Dzawani Tour, I am interested in the ${tour.title} package`
+    : `Halo Dzawani Tour, saya tertarik dengan paket ${tour.title}`;
 
   if (variant === "featured") {
     return (
@@ -55,7 +65,7 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
             <div className="flex items-center gap-1">
               <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
               <span className="font-semibold text-sm text-gray-700 font-inter">{tour.rating}</span>
-              <span className="text-gray-400 text-sm font-inter">({tour.reviewCount} ulasan)</span>
+              <span className="text-gray-400 text-sm font-inter">({tour.reviewCount} {reviewsLabel})</span>
             </div>
             <div className="flex items-center gap-1 text-gray-500">
               <Clock className="w-4 h-4" />
@@ -81,15 +91,15 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
               <p className="text-magenta font-bold text-xl font-poppins">
                 {formatCurrency(tour.price)}
               </p>
-              <p className="text-gray-400 text-xs font-inter">/orang</p>
+              <p className="text-gray-400 text-xs font-inter">{perPersonLabel}</p>
             </div>
             <a
-              href={`https://wa.me/628112222254?text=Halo Dzawani Tour, saya tertarik dengan paket ${tour.title}`}
+              href={`https://wa.me/628112222254?text=${encodeURIComponent(waText)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary text-sm py-2.5 px-5 inline-flex items-center gap-1.5"
             >
-              Pesan
+              {bookLabel}
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>
@@ -151,7 +161,7 @@ export default function TourCard({ tour, variant = "default" }: TourCardProps) {
             <p className="text-magenta font-bold text-lg font-poppins">
               {formatCurrency(tour.price)}
             </p>
-            <p className="text-gray-400 text-xs font-inter">/orang</p>
+            <p className="text-gray-400 text-xs font-inter">{perPersonLabel}</p>
           </div>
         </div>
       </div>
