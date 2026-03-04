@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = "force-dynamic";
+
 // GET - All schedules for open-trip packages, optionally filtered by tripCategory
 export async function GET(request: NextRequest) {
   try {
