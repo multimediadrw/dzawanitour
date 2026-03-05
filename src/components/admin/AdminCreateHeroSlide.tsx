@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 export default function AdminCreateHeroSlide() {
   const router = useRouter();
@@ -51,8 +52,12 @@ export default function AdminCreateHeroSlide() {
           <input type="text" className="w-full border p-2 rounded" value={formData.subtitleEn} onChange={(e) => setFormData({...formData, subtitleEn: e.target.value})} />
         </div>
         <div>
-          <label className="block mb-2">Image URL</label>
-          <input type="text" className="w-full border p-2 rounded" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} required />
+          <ImageUploader
+            label="Gambar Hero Slide"
+            required
+            value={formData.image}
+            onChange={(url) => setFormData({...formData, image: url})}
+          />
         </div>
         <div>
           <label className="block mb-2">CTA Text (ID)</label>

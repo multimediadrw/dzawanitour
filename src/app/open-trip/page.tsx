@@ -17,6 +17,8 @@ import {
   ChevronRight,
   Clock,
   MapPin,
+  Search,
+  X,
 } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -260,6 +262,7 @@ function OpenTripContent() {
   const [domestikData, setDomestikData] = useState<TripItem[]>([]);
   const [internasionalData, setInternasionalData] = useState<TripItem[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchSchedules() {
@@ -292,7 +295,15 @@ function OpenTripContent() {
     else setActiveTab("domestik");
   }, [searchParams]);
 
-  const data: TripItem[] = activeTab === "domestik" ? domestikData : internasionalData;
+  const rawData: TripItem[] = activeTab === "domestik" ? domestikData : internasionalData;
+
+  // Filter by search query
+  const data: TripItem[] = searchQuery.trim()
+    ? rawData.filter((item) =>
+        item.destinasi.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.includes.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : rawData;
 
   // Build map: dateKey -> trips
   const tripsByDate: Record<string, TripItem[]> = {};
@@ -346,6 +357,29 @@ function OpenTripContent() {
 
   return (
     <div className="container mx-auto px-4 max-w-7xl py-12">
+      {/* Search Bar */}
+      <div className="relative mb-6">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setSelectedDateKey(null);
+          }}
+          placeholder={language === "en" ? "Search destination, e.g. Bali, Turkey, Japan..." : "Cari destinasi, misal Bali, Turki, Jepang..."}
+          className="w-full pl-12 pr-12 py-3.5 rounded-2xl border-2 border-gray-200 focus:border-ocean focus:ring-2 focus:ring-ocean/20 outline-none text-sm font-inter bg-white shadow-sm transition-all"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => { setSearchQuery(""); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X className="w-4 h-4 text-gray-400" />
+          </button>
+        )}
+      </div>
+
       {/* Info Banner */}
       <div className="bg-ocean-50 border border-ocean/20 rounded-2xl p-5 mb-8 flex items-start gap-3">
         <Users className="w-5 h-5 text-ocean flex-shrink-0 mt-0.5" />
@@ -529,7 +563,31 @@ function OpenTripContent() {
 
         {/* Trip Cards */}
         <div className="p-6">
-          {!selectedDateKey || selectedTrips.length === 0 ? (
+          {searchQuery.trim() ? (
+            // Search results mode: show all matching trips
+            data.length === 0 ? (
+              <div className="text-center py-16">
+                <Search className="w-12 h-12 mx-auto mb-3 text-gray-200" />
+                <p className="font-semibold text-gray-500 font-poppins mb-1">
+                  {language === "en" ? `No trips found for "${searchQuery}"` : `Tidak ada trip untuk "${searchQuery}"`}
+                </p>
+                <p className="text-sm text-gray-400 font-inter">
+                  {language === "en" ? "Try a different keyword" : "Coba kata kunci lain"}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500 font-inter">
+                  {language === "en" ? "Found" : "Ditemukan"}{" "}
+                  <span className="font-semibold text-gray-800">{data.length} {ot.packages}</span>{" "}
+                  {language === "en" ? `for "${searchQuery}"` : `untuk "${searchQuery}"`}
+                </p>
+                {data.map((item) => (
+                  <TripCard key={item.id} item={item} t={ot as unknown as Record<string, string>} language={language} />
+                ))}
+              </div>
+            )
+          ) : !selectedDateKey || selectedTrips.length === 0 ? (
             <div className="text-center py-16">
               <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-200" />
               <p className="font-semibold text-gray-500 font-poppins mb-1">{ot.noTripsOnDate}</p>

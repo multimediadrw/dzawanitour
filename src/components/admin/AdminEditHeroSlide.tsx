@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 export default function AdminEditHeroSlide({ id }: { id: string }) {
   const router = useRouter();
@@ -34,8 +35,18 @@ export default function AdminEditHeroSlide({ id }: { id: string }) {
         <div><label className="block mb-2">Title (EN)</label><input type="text" className="w-full border p-2 rounded" value={formData.titleEn} onChange={(e) => setFormData({...formData, titleEn: e.target.value})} /></div>
         <div><label className="block mb-2">Subtitle (ID)</label><input type="text" className="w-full border p-2 rounded" value={formData.subtitle} onChange={(e) => setFormData({...formData, subtitle: e.target.value})} /></div>
         <div><label className="block mb-2">Subtitle (EN)</label><input type="text" className="w-full border p-2 rounded" value={formData.subtitleEn} onChange={(e) => setFormData({...formData, subtitleEn: e.target.value})} /></div>
-        <div><label className="block mb-2">Image URL</label><input type="text" className="w-full border p-2 rounded" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} required /></div>
-        <div className="flex gap-4"><button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded">Update</button><button type="button" onClick={() => router.back()} className="bg-gray-500 text-white px-6 py-2 rounded">Batal</button></div>
+        <div>
+          <ImageUploader
+            label="Gambar Hero Slide"
+            required
+            value={formData.image}
+            onChange={(url) => setFormData({...formData, image: url})}
+          />
+        </div>
+        <div className="flex gap-4">
+          <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded">Update</button>
+          <button type="button" onClick={() => router.back()} className="bg-gray-500 text-white px-6 py-2 rounded">Batal</button>
+        </div>
       </form>
     </div>
   );

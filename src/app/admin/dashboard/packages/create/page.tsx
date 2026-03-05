@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, X } from 'lucide-react';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 export default function CreatePackagePage() {
   const router = useRouter();
@@ -239,16 +240,11 @@ export default function CreatePackagePage() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                URL Gambar *
-              </label>
-              <input
-                type="url"
+              <ImageUploader
+                label="Gambar Paket"
                 required
-                placeholder="https://..."
                 value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ocean focus:border-transparent"
+                onChange={(url) => setFormData({ ...formData, image: url })}
               />
             </div>
           </div>

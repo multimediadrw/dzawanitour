@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 export default function CreateTestimonialPage() {
   const router = useRouter();
@@ -80,8 +81,11 @@ export default function CreateTestimonialPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">URL Foto</label>
-            <input type="url" name="image" value={formData.image} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+            <ImageUploader
+              label="Foto Profil"
+              value={formData.image}
+              onChange={(url) => setFormData({ ...formData, image: url })}
+            />
           </div>
 
           <div className="md:col-span-2">
