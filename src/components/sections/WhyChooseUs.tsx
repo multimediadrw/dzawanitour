@@ -79,7 +79,7 @@ export default function WhyChooseUs() {
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl h-[420px]">
               <img
-                src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=85"
+                src="/images/placeholder-tour.jpg"
                 alt={language === "en" ? "Journey with Dzawani Tour" : "Perjalanan bersama Dzawani Tour"}
                 className="w-full h-full object-cover"
               />

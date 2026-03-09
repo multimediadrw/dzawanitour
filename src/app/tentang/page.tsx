@@ -12,7 +12,7 @@ export default function TentangPage() {
     {
       name: "Ahmad Dzawani",
       role: "Founder & CEO",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+      image: "/images/placeholder-tour.jpg",
       bio: language === "en"
         ? "Over 15 years of experience in the Indonesian and international tourism industry."
         : "Lebih dari 15 tahun berpengalaman di industri pariwisata Indonesia dan internasional.",
@@ -20,7 +20,7 @@ export default function TentangPage() {
     {
       name: "Siti Rahmawati",
       role: "Head of Operations",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
+      image: "/images/placeholder-tour.jpg",
       bio: language === "en"
         ? "Ensures every trip runs perfectly with the highest service standards."
         : "Memastikan setiap perjalanan berjalan sempurna dengan standar layanan tertinggi.",
@@ -28,7 +28,7 @@ export default function TentangPage() {
     {
       name: "Budi Santoso",
       role: "Senior Tour Guide",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
+      image: "/images/placeholder-tour.jpg",
       bio: language === "en"
         ? "Experienced guide with in-depth knowledge of 30+ tourist destinations."
         : "Guide berpengalaman dengan pengetahuan mendalam tentang 30+ destinasi wisata.",
@@ -36,7 +36,7 @@ export default function TentangPage() {
     {
       name: "Dewi Kusuma",
       role: "Customer Relations Manager",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80",
+      image: "/images/placeholder-tour.jpg",
       bio: language === "en"
         ? "Dedicated to ensuring the satisfaction of every Dzawani Tour customer."
         : "Berdedikasi untuk memastikan kepuasan setiap pelanggan Dzawani Tour.",
@@ -144,7 +144,7 @@ export default function TentangPage() {
             <div className="relative">
               <div className="rounded-3xl overflow-hidden shadow-2xl h-[450px]">
                 <img
-                  src="https://images.unsplash.com/photo-1522199755839-a2bacb67c546?w=800&q=85"
+                  src="/images/placeholder-tour.jpg"
                   alt="Dzawani Tour Story"
                   className="w-full h-full object-cover"
                 />
