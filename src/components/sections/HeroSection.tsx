@@ -18,7 +18,7 @@ interface HeroSlide {
 const defaultSlides: HeroSlide[] = [
   {
     id: "1",
-    image: "/images/placeholder-tour.jpg",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&q=90",
     title: "Bali Paradise",
     titleEn: "Bali Paradise",
     subtitle: "Pulau Dewata yang Memukau",
@@ -27,7 +27,7 @@ const defaultSlides: HeroSlide[] = [
   },
   {
     id: "2",
-    image: "/images/placeholder-tour.jpg",
+    image: "https://images.unsplash.com/photo-1527838832700-5059252407fa?w=1920&q=90",
     title: "Istanbul & Cappadocia",
     titleEn: "Istanbul & Cappadocia",
     subtitle: "Keajaiban Dua Benua",
@@ -36,7 +36,7 @@ const defaultSlides: HeroSlide[] = [
   },
   {
     id: "3",
-    image: "/images/placeholder-tour.jpg",
+    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=90",
     title: "Jepang Sakura",
     titleEn: "Japan Sakura",
     subtitle: "Negeri Matahari Terbit",
