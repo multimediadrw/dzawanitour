@@ -7,23 +7,27 @@ const globalForPrisma = globalThis as unknown as {
   pool: Pool | undefined;
 };
 
-// Create connection pool only if DATABASE_URL is available
-let adapter: PrismaPg | undefined;
+function createPrismaClient(): PrismaClient {
+  const databaseUrl = process.env.DATABASE_URL;
 
-if (process.env.DATABASE_URL) {
+  // Prisma v7 requires an adapter - create one with available URL or a dummy for build time
+  const connectionString = databaseUrl || 'postgresql://build:build@localhost/build';
+
   const pool = globalForPrisma.pool ?? new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
   });
-  
-  if (process.env.NODE_ENV !== 'production') globalForPrisma.pool = pool;
-  
-  // Create adapter
-  adapter = new PrismaPg(pool);
+
+  if (process.env.NODE_ENV !== 'production') {
+    globalForPrisma.pool = pool;
+  }
+
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
 }
 
-// Create Prisma Client with adapter (if available)
-export const prisma = globalForPrisma.prisma ?? (adapter 
-  ? new PrismaClient({ adapter })
-  : new PrismaClient());
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
